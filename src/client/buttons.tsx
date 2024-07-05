@@ -3,24 +3,28 @@
 import { redirect } from 'next/dist/server/api-utils';
 import styles from '../app/page.module.css'
 
-export function VoteButton({ candidate }: { candidate: string }) {
-    return (
-        <button className={styles.vote_btn} onClick={async () => {
-            const response = await fetch('/api/vote', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'text/plain',
-                },
-                body: candidate,
-              });
-            alert(`Voted for ${candidate}! - ${response.status}`)
-        }}>
-        Vote
-        </button>
-    );
+export function VoteBtn({ candidate }: { candidate: string }) {
+  return (
+    <button className={styles.vote_btn} onClick={async () => {
+      const response = await fetch('/api/vote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        body: candidate,
+      });
+      
+      const tyScreen = document.getElementById(styles.ty_screen)
+
+      if (!tyScreen) return console.error("tyScreen not found")
+      tyScreen.style.top = '0'
+    }}>
+    Vote
+    </button>
+  );
 }
 
-export function LoginButton({ uname, pass }: { uname: string, pass: string }) {
+export function LoginBtn({ uname, pass }: { uname: string, pass: string }) {
   return (
     <button onClick={async () => {
       const response = await fetch('/api/login', {
@@ -38,5 +42,18 @@ export function LoginButton({ uname, pass }: { uname: string, pass: string }) {
       else
         alert(response.status);
     }}/>
+  )
+}
+
+export function ChangeVoteBtn() {
+  return (
+    <button onClick={() => {
+      const tyScreen = document.getElementById(styles.ty_screen)
+
+      if (!tyScreen) return console.error("tyScreen not found")
+      tyScreen.style.top = '-100%'
+    }}>
+      Change Vote
+    </button>
   )
 }

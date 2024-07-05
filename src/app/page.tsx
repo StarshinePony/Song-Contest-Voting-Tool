@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import { VoteButton } from "../client/buttons";
+import { ChangeVoteBtn, VoteBtn } from "../client/buttons";
 
 type Candidate = {
   name: string
@@ -48,7 +48,7 @@ const CandidateRows = ({ candidates }: { candidates: Array<Candidate> }) => {
         {candidate.name}
       </div>
 
-      <VoteButton candidate={candidate.name}/>
+      <VoteBtn candidate={candidate.name}/>
     </div>
   ));
 
@@ -57,10 +57,16 @@ const CandidateRows = ({ candidates }: { candidates: Array<Candidate> }) => {
 
 export default function Home() {
   return (
+    <>
+    <div id={styles.ty_screen}>
+      <div>Thank You For Voting!</div>
+      <ChangeVoteBtn/>
+    </div>
     <main className={styles.main}>
       <div className={styles.container}>
-          <CandidateRows candidates={candidates}/>
+        <CandidateRows candidates={candidates}/>
       </div>
     </main>
+    </>
   );
 }

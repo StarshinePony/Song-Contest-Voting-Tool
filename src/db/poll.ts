@@ -1,6 +1,11 @@
 import * as sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
 
+type Vote = {
+  ip: string,
+  candidate: string
+}
+
 export class Poll {
   static instance: Poll = new Poll();
 
@@ -21,10 +26,17 @@ export class Poll {
   }
 
   public async cast_vote(ip: string, candidate: string) {
+    const existing_vote = await this.db.get('SELECT * FROM votes WHERE ip=?', ip);
+
+    if (existing_vote)
+      return await this.db.run(
+        'UPDATE votes SET candidate=? WHERE ip=?',
+        candidate, ip
+      )
+    
     await this.db.run(
       'INSERT INTO votes (ip, candidate) VALUES (?, ?)',
-      ip,
-      candidate
+      ip, candidate
     )
   }
 }
