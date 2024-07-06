@@ -8,14 +8,12 @@ async function setup() {
     CREATE TABLE votes (
       ip TEXT PRIMARY KEY,  
       candidate TEXT  
-    );
+    ); CREATE TABLE candidates (
+      name TEXT PRIMARY KEY,
+      country TEXT,
+      song TEXT
+    )
   `)
-
-  await Poll.instance.db.run(
-    'INSERT INTO votes (ip, candidate) VALUES (?, ?)',
-    'some_ip',
-    'some_candidate'
-  )
   
   await Poll.instance.db.close()  
 }

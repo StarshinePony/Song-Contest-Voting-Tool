@@ -1,11 +1,6 @@
 import * as sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
 
-type Vote = {
-  ip: string,
-  candidate: string
-}
-
 export class Poll {
   static instance: Poll = new Poll();
 
@@ -26,6 +21,8 @@ export class Poll {
   }
 
   public async cast_vote(ip: string, candidate: string) {
+    await this.dbReady;
+
     const existing_vote = await this.db.get('SELECT * FROM votes WHERE ip=?', ip);
 
     if (existing_vote)
