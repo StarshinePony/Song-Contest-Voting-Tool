@@ -9,8 +9,8 @@ const Login = () => {
 
     return (
         <div>
-            <input type='text' onChange={e => set_uname(e.target.value)}/>
-            <input type='text' onChange={e => set_pass(e.target.value)}/>
+            <input type='text' onChange={e => set_uname(e.target.value)} placeholder='username'/>
+            <input type='password' onChange={e => set_pass(e.target.value)} placeholder='password'/>
             <LoginBtn uname={uname} pass={pass}/>
         </div>
     );

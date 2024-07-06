@@ -11,11 +11,10 @@ type ResponseData = {
 }
  
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
-    console.log(`${req.body.uname} - ${req.body.pass}`)
-    // TODO
+    // TODO pull credentials from gitignored file
     if (req.body.uname === "user" && req.body.pass === "12345")
       // TODO: also terribly unsecure for now
-      res.setHeader('Auth', `${req.body.uname}-${req.body.pass}`).status(200).json({result: "nop"})
+      res.setHeader('Set-Cookie', `Auth=${req.body.uname}-${req.body.pass}`).json({result: 'success'})
     else
-      res.status(200).json({result: rude_reject_msg})
+      res.json({result: rude_reject_msg})
 }

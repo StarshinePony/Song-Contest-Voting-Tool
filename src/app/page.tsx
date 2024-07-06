@@ -1,6 +1,8 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import { ChangeVoteBtn, VoteBtn } from "../client/buttons";
+import { VoteBtn } from "@/client/buttons";
+import { VoteSubmitOverlay } from "@/client/components";
+import { OverlayContextProvider } from "@/client/contexts";
 
 type Candidate = {
   name: string
@@ -57,16 +59,13 @@ const CandidateRows = ({ candidates }: { candidates: Array<Candidate> }) => {
 
 export default function Home() {
   return (
-    <>
-    <div id={styles.ty_screen}>
-      <div>Thank You For Voting!</div>
-      <ChangeVoteBtn/>
-    </div>
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <CandidateRows candidates={candidates}/>
-      </div>
-    </main>
-    </>
+    <OverlayContextProvider>
+      <VoteSubmitOverlay/>
+      <main className={styles.main}>
+        <div className={styles.container}>
+          <CandidateRows candidates={candidates}/>
+        </div>
+      </main>
+    </OverlayContextProvider>
   );
 }
