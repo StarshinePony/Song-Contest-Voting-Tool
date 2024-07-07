@@ -1,5 +1,5 @@
 import styles from '@/app/page.module.css'
-import { LoginBtn } from '@/client/buttons';
+import { LoginBtn } from '@/client/components';
 import { useState } from 'react';
 
 const Login = () => {

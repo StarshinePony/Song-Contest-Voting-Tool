@@ -2,7 +2,7 @@
 
 database_thingy.db
 rude_reject_msg.txt
-public/**/*.jpg
+admin_hash.txt
 
 # dependencies
 /node_modules

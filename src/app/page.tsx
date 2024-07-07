@@ -1,54 +1,20 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import { VoteBtn } from "@/client/buttons";
-import { VoteSubmitOverlay } from "@/client/components";
+import { VoteSubmitOverlay, VoteBtn } from "@/client/components";
 import { OverlayContextProvider } from "@/client/contexts";
+import { Poll } from "@/db/poll";
 
-type Candidate = {
-  name: string
-  file_name: string
-}
+const CandidateRows = async () => {
+  const candidates = await Poll.instance.get_artists()
 
-const candidates: Array<Candidate> = [
-  {
-    name: "Big Mac",
-    file_name: "big_mac"
-  },
-  {
-    name: "Fluttershy",
-    file_name: "fluttershy"
-  },
-  {
-    name: "Pipp Petals",
-    file_name: "pipp_petals"
-  },
-  {
-    name: "Rarity",
-    file_name: "rarity"
-  },
-  {
-    name: "Ruby Jubilee",
-    file_name: "ruby_jubilee"
-  },
-  {
-    name: "Saphire Shores",
-    file_name: "saphire_shores"
-  }
-]
+  if (!candidates)
+    return <div className={styles.candidate_row}>No Candidates Yet</div>
 
-const CandidateRows = ({ candidates }: { candidates: Array<Candidate> }) => {
-  const divs = candidates.map((candidate, index) => (
-    <div key={index} className={styles.candidate_row}>
-      <Image
-        className={styles.artist_img}
-        src={`/${candidate.file_name}.jpg`}
-        alt={candidate.name} width={90}
-        height={90}
-      />
-
-      <div className={styles.artist_name}>
-        {candidate.name}
-      </div>
+  const divs = candidates.map((candidate) => (
+    <div className={styles.candidate_row}>
+      <div style={{marginLeft: 10}}>{candidate.name}</div>
+      <div style={{marginLeft: 10}}>{candidate.country}</div>
+      <div style={{marginLeft: 10}}>{candidate.song}</div>
 
       <VoteBtn candidate={candidate.name}/>
     </div>
@@ -63,7 +29,7 @@ export default function Home() {
       <VoteSubmitOverlay/>
       <main className={styles.main}>
         <div className={styles.container}>
-          <CandidateRows candidates={candidates}/>
+          <CandidateRows/>
         </div>
       </main>
     </OverlayContextProvider>
