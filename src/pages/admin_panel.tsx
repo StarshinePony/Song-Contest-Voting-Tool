@@ -1,61 +1,75 @@
 import styles from '@/app/page.module.css'
-import { useState } from 'react';
+import Credentials from '@/credentials';
+import { GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
-const AdminPanel = () => {
-    // TODO: check that the auth cookie is valid to allow access
+export const getServerSideProps = ((context: GetServerSidePropsContext) => {
+    const { req } = context
+    const allowEntry: boolean = !!req.cookies.Auth && Credentials.admin_auth_check(req.cookies.Auth)
+    return { props: { allowEntry } }
+})
+
+export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
+    const router = useRouter()
+
+    if (!allowEntry)
+        return useEffect(() => {router.push('/admin_login')})
+
     const
-        [type, setType] = useState("Artist"),
-        [input1, setInput1] = useState(''),
-        [input2, setInput2] = useState(''),
-        [input3, setInput3] = useState(''),
-        [ph1, setph1] = useState('name'),
-        [ph2, setph2] = useState('song'),
-        [ph3, setph3] = useState('country'),
-        [inputType, setInputType] = useState('text')
+        [musicianName, setMusicianName] = useState(''),
+        [musicianSong, setMusicianSong] = useState(''),
+        [musicianCountry, setMusicianCountry] = useState(''),
+        [countryName,setCountryName] = useState(''),
+        [countryPass,setCountryPass] = useState(''),
+        [countryPass2,setCountryPass2] = useState('')
 
     return (
         <main>
-            <button onClick={() => {
-                const new_values = type === "Artist" ? {
-                    candidate_type: "Country",
-                    input_type: "password",
-                    ph1: "name",
-                    ph2: "password",
-                    ph3: "re-enter password"
-                } : {
-                    candidate_type: "Artist",
-                    input_type: "text",
-                    ph1: "name",
-                    ph2: "country",
-                    ph3: "song"
-                } 
-                setType(new_values.candidate_type); setInputType(new_values.input_type);
-                setph1(new_values.ph1); setph2(new_values.ph2); setph3(new_values.ph3);
-                setInput1(''); setInput2(''); setInput3('');
-            }}>
-                Change Type
-            </button>
+            <div>
+                <input type='text' onChange={e => setMusicianName(e.target.value)} placeholder='name'/>
+                <input type='text' onChange={e => setMusicianSong(e.target.value)} placeholder='song'/>
+                <input type='text' onChange={e => setMusicianCountry(e.target.value)} placeholder='country'/>
+                
+                <button onClick={async () => {
+                    const response = await fetch('/api/add_musician', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ musicianName, musicianSong, musicianCountry })
+                    });
 
-            <input type='text' onChange={e => setInput1(e.target.value)} placeholder={ph1} value={input1}/>
-            <input type={inputType} onChange={e => setInput2(e.target.value)} placeholder={ph2} value={input2}/>
-            <input type={inputType} onChange={e => setInput3(e.target.value)} placeholder={ph3} value={input3}/>
-            
-            
-            <button onClick={async () => {
-                const response = await fetch('/api/add_candidate', {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ type, input1, input2, input3 })
-                });
+                    alert((await response.json()).result)
+                }}>
+                    Add Musician
+                </button>
+            </div>
+            <div>
+                <input type='text' onChange={e => setCountryName(e.target.value)} placeholder='name'/>
+                <input type='password' onChange={e => setCountryPass(e.target.value)} placeholder='password'/>
+                <input type='password' onChange={e => setCountryPass2(e.target.value)} placeholder='re-enter password'/>
+                
+                <button onClick={async () => {
+                    // TODO: change this to display above the creation button in red text
+                    if (countryPass !== countryPass2) {
+                        alert("Passwords Do Not Match")
+                        return
+                    }
 
-                alert((await response.json()).result ? "Candidate Successfully Added" : "Candidate Already Present")
-            }}>
-                Add {type}
-            </button>
+                    const response = await fetch('/api/create_country_account', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ countryName, countryPass })
+                    });
+
+                    alert((await response.json()).result)
+                }}>
+                    Create Country Account
+                </button>
+            </div>
         </main>
     );
 };
-  
-export default AdminPanel;
