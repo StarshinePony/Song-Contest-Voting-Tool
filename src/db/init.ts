@@ -1,10 +1,10 @@
-import { Poll, tables } from "./poll"
+import { DB, tables } from "./database"
 
 async function setup() {
 
-  await Poll.instance.dbReady;
+  await DB.instance.dbReady;
 
-  await Poll.instance.db.exec(`
+  await DB.instance.db.exec(`
     CREATE TABLE ${tables.artist_votes.table_name} (
       ${tables.artist_votes.ip} TEXT PRIMARY KEY,  
       ${tables.artist_votes.candidate} TEXT  
@@ -12,13 +12,15 @@ async function setup() {
       ${tables.artists.name} TEXT PRIMARY KEY,
       ${tables.artists.country} TEXT,
       ${tables.artists.song} TEXT
-    ); Create TABLE ${tables.countries.table_name} (
+    ); CREATE TABLE ${tables.countries.table_name} (
       ${tables.countries.name} TEXT PRIMARY KEY,
-      ${tables.countries.password_hash} TEXT
+      ${tables.countries.password_hash} TEXT,
+      ${tables.countries.salt} TEXT,
+      ${tables.countries.session_id} TEXT
     );
   `)
   
-  await Poll.instance.db.close()  
+  await DB.instance.db.close()  
 }
 
 setup()
