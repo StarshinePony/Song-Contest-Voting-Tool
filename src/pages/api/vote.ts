@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Poll } from '@/db/poll';
+import { DB } from '@/db/database';
  
 type ResponseData = {
   result?: string,
@@ -9,6 +9,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   const ip = req.socket.remoteAddress;
   if (ip === undefined) return;
 
-  await Poll.instance.cast_vote(ip, req.body)
+  if (req.body === "REMOVE")
+    await DB.instance.remove_vote(ip)
+  else
+    await DB.instance.cast_vote(ip, req.body)
+
   res.json({ result: 'success' })
 }

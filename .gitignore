@@ -1,8 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 database_thingy.db
-rude_reject_msg.txt
-admin_hash.txt
+credentials.txt
 
 # dependencies
 /node_modules
