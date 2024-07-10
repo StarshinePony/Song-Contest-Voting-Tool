@@ -1,28 +1,21 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Main Features (bare minimum)
+Voting Site:
+* ~All musicians are listed with a Vote button~
+* ~Votes are tracked with IP Address Logger~
+* If you voted all of the other musicians should disappear
+* ~Thanks for voting screen with a button to~ remove your vote ~and get back to the original voting screen~
 
-## Getting Started
+Country Voting Site:
+* Panel where Countries can log in to give their points from 12 - 1 (without the 11 since that is the country itself)
+Country Login Field should look like
 
-First, run the development server:
+Country name, (String)
+Password, (string) 
+add button
 
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Admin Panel:
+* ~Admin panel with a set username (root) and a password~
+* ~Panel Staff can add the Musicians to the voting site~
+* Live view of current Voting statistics
+* Field for creating new Country Accounts (Note: Misunderstood as adding country candidates)
+* An export button to create a CSV file into an output folder
