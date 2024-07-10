@@ -1,11 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { DB } from '@/db/database';
  
-type ResponseData = {
-  result?: string,
-}
- 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const ip = req.socket.remoteAddress;
   if (ip === undefined) return;
 

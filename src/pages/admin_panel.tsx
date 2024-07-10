@@ -22,7 +22,9 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
         [musicianCountry, setMusicianCountry] = useState(''),
         [countryName,setCountryName] = useState(''),
         [countryPass,setCountryPass] = useState(''),
-        [countryPass2,setCountryPass2] = useState('')
+        [countryPass2,setCountryPass2] = useState(''),
+        [currentPass, setCurrentPass] = useState(''),
+        [newPass, setNewPass] = useState('')
 
     return (
         <main>
@@ -46,6 +48,32 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                 </button>
             </div>
             <div>
+                <input type='password' onChange={e => setCurrentPass(e.target.value)} placeholder='current password'/>
+                <input type='password' onChange={e => setNewPass(e.target.value)} placeholder='new password'/>
+                
+                <button onClick={async () => {
+                    if (!currentPass || !newPass)
+                        return
+
+                    if (newPass.length < 8)
+                        return alert("Password must contain at least 8 characters")
+
+                    const response = await fetch('/api/change_admin_password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ currentPass, newPass })
+                    });
+
+                    const resp_body = await response.json()
+
+                    alert(resp_body.result)
+                }}>
+                    Change Admin Password
+                </button>
+            </div>
+            <div>
                 <input type='text' onChange={e => setCountryName(e.target.value)} placeholder='name'/>
                 <input type='password' onChange={e => setCountryPass(e.target.value)} placeholder='password'/>
                 <input type='password' onChange={e => setCountryPass2(e.target.value)} placeholder='re-enter password'/>
@@ -60,7 +88,7 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                     const response = await fetch('/api/create_country_account', {
                         method: 'POST',
                         headers: {
-                        'Content-Type': 'application/json'
+                            'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({ countryName, countryPass })
                     });

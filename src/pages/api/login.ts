@@ -12,5 +12,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.setHeader('Set-Cookie', `country_session=${session_id};Path=/`).json({result: 'success'})
     }
     else
-        res.json({result: "invalid credentials"})
+        res.json({ result: "invalid credentials" })
 }

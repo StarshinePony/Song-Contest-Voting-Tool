@@ -15,8 +15,13 @@ async function init_credentials() {
             while (!inputs[0])
                 inputs[0] = await rl.question('Input Username: ')
 
-            while (!inputs[1])
+            while (!inputs[1]) {
                 inputs[1] = await rl.question('Input Password: ')
+                if (inputs[1].length < 8) {
+                    inputs[1] = ''
+                    console.log('Password must have at least 8 characters')
+                }
+            }
 
             if (((await rl.question(`Confirm: (y)\n`)).toLowerCase() === "y"))
                 break

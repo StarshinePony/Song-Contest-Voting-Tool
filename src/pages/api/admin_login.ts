@@ -8,5 +8,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // it's actual not great practice to make these non-random but this should hopefully be good enough
     res.setHeader('Set-Cookie', `Auth=${hash('sha512', req.body.uname + hash('sha512', req.body.pass))};Path=/`).json({result: 'success'})
   else
-    res.json({result: "invalid credentials"})
+    res.json({ result: "invalid credentials" })
 }

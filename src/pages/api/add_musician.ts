@@ -9,7 +9,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     req.body.musicianSong
   );
 
-  res.json({result: added ? "Candidate Added" : "Candidate Already Present"})
+  res.json({ result: added ? "Candidate Added" : "Candidate Already Present" })
 }
 
 export default adminHandler(handler)

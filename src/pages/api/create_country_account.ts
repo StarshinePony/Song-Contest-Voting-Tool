@@ -8,7 +8,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     req.body.countryPass
   )
 
-  res.json({result: created ? "Account Successfully Created" : "Country Already Present"})
+  res.json({ result: created ? "Account Successfully Created" : "Country Already Present" })
 }
 
 export default adminHandler(handler)
