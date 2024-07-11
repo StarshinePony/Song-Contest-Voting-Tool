@@ -1,6 +1,6 @@
 import * as sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
-import { hash, randomBytes } from 'crypto';
+import { createHash, randomBytes } from 'crypto';
 
 // TODO: this is rly poorly made rn
 // renaming any of the strings would mean the corresponding
@@ -60,7 +60,7 @@ export class DB {
 
   public async cast_vote(ip: string, candidate: string) {
     await this.dbReady;
-    
+
     await this.db.run(
       `INSERT OR REPLACE INTO ${tables.artist_votes.table_name} (${tables.artist_votes.ip}, ${tables.artist_votes.candidate}) VALUES (?, ?)`,
       ip, candidate
@@ -93,22 +93,19 @@ export class DB {
     await this.dbReady;
 
     try {
-      const salt = randomBytes(16).toString('base64')
-      await this.db.run(`INSERT INTO ${tables.countries.table_name} (${
-        tables.countries.name}, ${
-        tables.countries.password_hash}, ${
-        tables.countries.salt}, ${
-        tables.countries.session_id
-      }) VALUES (?, ?, ?, ?)`,
-      name,
-      hash('sha512', password + salt),
-      salt,
-      null
-    )
+      const salt = randomBytes(16).toString('base64');
+      const hash = createHash('sha512').update(password + salt).digest('hex');
+      await this.db.run(`INSERT INTO ${tables.countries.table_name} (${tables.countries.name}, ${tables.countries.password_hash}, ${tables.countries.salt}, ${tables.countries.session_id
+        }) VALUES (?, ?, ?, ?)`,
+        name,
+        hash,
+        salt,
+        null
+      );
       return true;
     } catch (err) {
-      console.error(err)
-      return false
+      console.error(err);
+      return false;
     }
   }
 
@@ -118,7 +115,7 @@ export class DB {
     return await this.db.get(
       `SELECT * FROM ${tables.countries.table_name} WHERE ${tables.countries.name}=?`,
       name
-    )
+    );
   }
 
   public async get_country_by_session(session_id: string): Promise<Country | undefined> {
@@ -127,13 +124,13 @@ export class DB {
     return await this.db.get(
       `SELECT * FROM ${tables.countries.table_name} WHERE ${tables.countries.session_id}=?`,
       session_id
-    )
+    );
   }
 
   public async get_artists(): Promise<Artist[] | undefined> {
     await this.dbReady;
 
-    return this.db.all(`SELECT * FROM ${tables.artists.table_name}`)
+    return this.db.all(`SELECT * FROM ${tables.artists.table_name}`);
   }
 
   public async add_session(country_name: string, session_id: string) {
@@ -142,6 +139,6 @@ export class DB {
     await this.db.run(
       `UPDATE ${tables.countries.table_name} SET ${tables.countries.session_id}=? WHERE ${tables.countries.name}=?`,
       session_id, country_name
-    )
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { hash } from 'crypto';
+import crypto from 'crypto';
 import fs from 'fs';
 import * as readline from 'readline/promises';
 
@@ -30,11 +30,15 @@ async function init_credentials() {
             inputs[1] = ''
         }
 
-        fs.writeFileSync('credentials.txt', `${inputs[0]}\n${hash('sha512', inputs[1])}`)
+        const hash = crypto.createHash('sha512');
+        hash.update(inputs[1]);
+        const hashedPassword = hash.digest('hex');
+
+        fs.writeFileSync('credentials.txt', `${inputs[0]}\n${hashedPassword}`)
         console.log("Saved username and password hash in credentials.txt")
     } finally {
         rl.close();
     }
 }
 
-init_credentials()
+init_credentials();
