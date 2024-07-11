@@ -35,6 +35,7 @@ init.ts
 ### [pages](https://github.com/Brambles-cat/server-thing/tree/master/src/pages):
 - contains all of the web app's pages that can be viewed through https://site_domain/page_file_name
 - Nextjs treats files here as the app's routes, so utility files should be placed elsewhere
+
 pages/api
 - contains endpoints where the client can send requests for the server to perform some actuon, which usually involves adding or changing data in the db
 - Nextjs treats all files in here as endpoints, so any utility files should be placed elsewhere
