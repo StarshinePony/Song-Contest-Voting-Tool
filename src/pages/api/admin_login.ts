@@ -1,12 +1,19 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { hash } from 'crypto';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import crypto from 'crypto';
 import Credentials from '@/credentials';
- 
+
+const hashData = (data: string) => {
+  const hash = crypto.createHash('sha512');
+  hash.update(data);
+  return hash.digest('hex');
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (Credentials.admin_login_check(req.body.uname, req.body.pass))
-    // hash() twice since the password hash is stored and the hash(uname + stored hash) is checked against the auth key
-    // it's actual not great practice to make these non-random but this should hopefully be good enough
-    res.setHeader('Set-Cookie', `Auth=${hash('sha512', req.body.uname + hash('sha512', req.body.pass))};Path=/`).json({result: 'success'})
-  else
-    res.json({ result: "invalid credentials" })
+  if (Credentials.admin_login_check(req.body.uname, req.body.pass)) {
+    const hashedPassword = hashData(req.body.pass);
+    const authKey = hashData(req.body.uname + hashedPassword);
+    res.setHeader('Set-Cookie', `Auth=${authKey}; Path=/`).json({ result: 'success' });
+  } else {
+    res.json({ result: "invalid credentials" });
+  }
 }
