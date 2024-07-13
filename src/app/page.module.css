@@ -1,64 +1,113 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 6rem;
   min-height: 100vh;
-  background-color: #3d3d3d;
+  background-color: #7e007e;
+
 }
 
 .container {
   display: flex;
-  width: 90vw;
   flex-direction: column;
   align-items: center;
+  width: 90vw;
+  max-width: 1200px;
+  padding: 2rem;
+  background-color: #5e005e;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  color: #fff;
   overflow: hidden;
-
-  background-color: #a0313100;
-  border-radius: 18px; /* Rounded corners */
 }
 
-.candidate_row {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  color: #000;
+.header {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #ff8bff;
+  font-family: 'Arial', sans-serif;
 }
 
-.no_candidates {
+.navBtns {
   display: flex;
-  justify-content: center;
-  padding: 10px;
-  background-color: #f9f9f9;
-  color: #000;
+  flex-direction: column;
+  gap: 1rem;
   width: 100%;
 }
 
-.artist_img {
-  margin-left: 10px;
-  border-radius: 5px;
-}
-
-.artist_name {
-  margin-left: 20px;
-  font-size: large;
-  max-width: var(--max-width);
-  font-family: var(--font-mono);
-}
-
-.vote_btn {
-  margin-left: auto;
-  margin-right: 15px;
-  border-radius: 25px;
-  background-color: #363636;
-  font-size: medium;
+.navBtns button {
+  background-color: #ff8bff;
+  color: #fff;
   border: none;
-  padding: 15px 20px 15px 20px;
+  padding: 15px 20px;
+  font-size: 1rem;
+  font-family: 'Arial', sans-serif;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
 }
+
+.navBtns button:hover {
+  background-color: #ff65d4;
+  transform: translateY(-2px);
+}
+
+.navBtns button:active {
+  background-color: #ff65d4;
+  transform: translateY(0);
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #6d006d;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.formSection input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.formSection button {
+  background-color: #ff8bff;
+  color: #ffffff;
+  border: none;
+  padding: 15px 20px;
+  font-size: 1rem;
+  font-family: 'Arial', sans-serif;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.formSection button:hover {
+  background-color: #ff65d4;
+  transform: translateY(-2px);
+}
+
+.formSection button:active {
+  background-color: #ff65d4;
+  transform: translateY(0);
+}
+
 
 #ty_screen {
   position: fixed;
@@ -74,11 +123,140 @@
   transition: top 0.8s;
 }
 
-#ty_screen > button {
+#ty_screen>button {
   background: none;
   border: none;
   margin-bottom: 20vh;
   color: rgb(0, 220, 240);
   text-decoration: underline;
   font-size: large;
+}
+
+.artistBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem;
+  background-color: #5e005e;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.artistInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.artistName {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff8bff;
+}
+
+.artistCountry {
+  font-size: 1rem;
+  color: #fff;
+  margin-top: 0.5rem;
+}
+
+.artistSong {
+  font-size: 1rem;
+  color: #fff;
+  margin-top: 0.5rem;
+}
+
+.vote_btn {
+  background-color: #ff8bff;
+  color: #fff;
+  border: none;
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-family: 'Arial', sans-serif;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.vote_btn:hover {
+  background-color: #ff65d4;
+  transform: translateY(-2px);
+}
+
+.vote_btn:active {
+  background-color: #ff65d4;
+  transform: translateY(0);
+}
+
+.no_candidates {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background-color: #5e005e;
+  color: #fff;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background-color: #510051;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+
+.loginForm h1 {
+  font-size: 2rem;
+  color: #ff8bff;
+  margin-bottom: 1rem;
+  font-family: 'Arial', sans-serif;
+}
+
+.inputField {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.submitButton {
+  background-color: #ff8bff;
+  color: #fff;
+  border: none;
+  padding: 15px 20px;
+  font-size: 1rem;
+  font-family: 'Arial', sans-serif;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.submitButton:hover {
+  background-color: #ff65d4;
+  transform: translateY(-2px);
+}
+
+.submitButton:active {
+  background-color: #ff65d4;
+  transform: translateY(0);
+}
+
+.message {
+  color: #fff;
+  background-color: #ff4d4d;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
 }

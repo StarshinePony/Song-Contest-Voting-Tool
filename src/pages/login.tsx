@@ -11,11 +11,11 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
     return { props: { allowEntry } }
 })
 
-export default function Login({ allowEntry }: { allowEntry: boolean}) {
+export default function Login({ allowEntry }: { allowEntry: boolean }) {
     const router = useRouter()
 
     if (allowEntry)
-        return useEffect(() => {router.push('/country_voting')})
+        return useEffect(() => { router.push('/country_voting') })
 
     const
         [uname, set_uname] = useState(''),
@@ -23,9 +23,9 @@ export default function Login({ allowEntry }: { allowEntry: boolean}) {
 
     return (
         <div>
-            <input type='text' onChange={e => set_uname(e.target.value)} placeholder='username'/>
-            <input type='password' onChange={e => set_pass(e.target.value)} placeholder='password'/>
-            <LoginBtn api_route='login' page_route='country_voting' uname={uname} pass={pass}/>
+            <input type='text' onChange={e => set_uname(e.target.value)} placeholder='username' />
+            <input type='password' onChange={e => set_pass(e.target.value)} placeholder='password' />
+            <LoginBtn api_route='login' page_route='country_voting' uname={uname} pass={pass} />
         </div>
     );
 };
