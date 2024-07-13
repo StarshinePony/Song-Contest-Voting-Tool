@@ -24,10 +24,25 @@ export default function Login({ allowEntry }: { allowEntry: boolean }) {
     const [pass, set_pass] = useState('');
 
     return (
-        <div>
-            <input type="text" onChange={e => set_uname(e.target.value)} placeholder="username" />
-            <input type="password" onChange={e => set_pass(e.target.value)} placeholder="password" />
-            <LoginBtn api_route="admin_login" page_route="admin_panel" uname={uname} pass={pass} />
+        <div className={styles.main}>
+            <div className={styles.loginForm}>
+                <h1>Admin Login</h1>
+                <input
+                    type='text'
+                    value={uname}
+                    onChange={e => set_uname(e.target.value)}
+                    placeholder='Enter Username'
+                    className={styles.inputField}
+                />
+                <input
+                    type='password'
+                    value={pass}
+                    onChange={e => set_pass(e.target.value)}
+                    placeholder='Enter Password'
+                    className={styles.inputField}
+                />
+                <LoginBtn api_route='admin_login' page_route='admin_panel' uname={uname} pass={pass} />
+            </div>
         </div>
     );
 }

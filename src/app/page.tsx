@@ -6,11 +6,11 @@ export default function Home() {
     <div className={styles.main}>
       <div className={styles.container}>
         <div className={styles.header}>
-          Bronyvision Songcontest<br />Galacon 2024 Edition
+          Bronyvision Songcontest<br />Galacon 2024 Edition<br />Voting
         </div>
         <div className={styles.navBtns}>
           <Link href="public_login" passHref>
-            <button>Artist Voting</button>
+            <button>User Voting</button>
           </Link>
           <Link href="login" passHref>
             <button>Country Voting</button>

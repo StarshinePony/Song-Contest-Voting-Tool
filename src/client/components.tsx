@@ -24,7 +24,7 @@ export function LoginBtn({ api_route, page_route, uname, pass }: { api_route: st
   const router = useRouter()
 
   return (
-    <button onClick={async () => {
+    <button className={styles.submitButton} onClick={async () => {
       const response = await fetch(`/api/${api_route}`, {
         method: 'POST',
         headers: {
@@ -37,7 +37,7 @@ export function LoginBtn({ api_route, page_route, uname, pass }: { api_route: st
         router.push(`/${page_route}`)
       else
         alert("Invalid Credentials");
-    }} />
+    }}>Login</button>
   )
 }
 

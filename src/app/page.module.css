@@ -34,6 +34,7 @@
 
 .navBtns {
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 1rem;
   width: 100%;
@@ -136,18 +137,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  max-width: 600px;
+  text-align: center;
+  width: 60%;
+  max-width: 400px;
   padding: 1rem;
   background-color: #5e005e;
   border-radius: 12px;
   margin-bottom: 1rem;
+  font-family: 'Arial Black', sans-serif;
 }
 
 .artistInfo {
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .artistName {
@@ -166,6 +170,36 @@
   font-size: 1rem;
   color: #fff;
   margin-top: 0.5rem;
+}
+
+.selectMenu {
+  background-color: #510051;
+  border: 1px solid #ff8bff;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  width: 100px;
+}
+
+.selectMenu option {
+  background-color: #5e005e;
+  color: #fff;
+  padding: 10px;
+}
+
+.selectMenu option:hover {
+  background-color: #ff8bff;
+}
+
+.selectMenu option:checked {
+  background-color: #510051;
+}
+
+.selectMenu option[selected] {
+  font-weight: bold;
+  color: #ff8bff;
 }
 
 .vote_btn {
@@ -232,6 +266,18 @@
 }
 
 .submitButton {
+  background-color: #ff8bff;
+  color: #fff;
+  border: none;
+  padding: 15px 20px;
+  font-size: 1rem;
+  font-family: 'Arial', sans-serif;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.loginBtn {
   background-color: #ff8bff;
   color: #fff;
   border: none;

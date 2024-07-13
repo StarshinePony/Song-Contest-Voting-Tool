@@ -3,82 +3,98 @@ import { DB } from '@/db/database';
 import "@/app/globals.css";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import Credentials from '@/credentials';
+type Props = {
+    candidates: string[],
+    allowEntry: boolean
+};
+export const getServerSideProps: GetServerSideProps<Props> = async (context: GetServerSidePropsContext) => {
+    const candidates: string[] = await DB.instance.get_country_names();
+    const { req } = context;
+    const allowEntry: boolean = !!req.cookies.country_session && await Credentials.country_session_check(req.cookies.country_session);
+    const userSession = req.cookies.country_session
+    let userCountry: string | undefined = undefined
+    if (userSession) {
+        const country = await DB.instance.get_country_by_session(userSession)
+        userCountry = country?.name
+    }
+    console.log(userCountry)
+    console.log(allowEntry)
+    console.log(candidates)
 
-export const getServerSideProps = (async (context: GetServerSidePropsContext) => {
-  const candidates: string[] = await DB.instance.get_country_names()
+    const filteredCandidates = userCountry ? candidates.filter(country => country !== userCountry) : candidates;
+    console.log(filteredCandidates)
 
-  const { req } = context
-  const allowEntry: boolean = !!req.cookies.country_session && await Credentials.country_session_check(req.cookies.country_session)
-  return { props: { candidates, allowEntry } }
-})
+    return { props: { candidates: filteredCandidates, allowEntry } };
+};
 
-export default function CountryVoting({ candidates, allowEntry }: { candidates: string[], allowEntry: boolean }) {
-  const router = useRouter()
+export default function CountryVoting({ candidates, allowEntry }: Props) {
+    const router = useRouter();
 
-  if (!allowEntry)
-    return useEffect(() => {router.push('/login')})
+    useEffect(() => {
+        if (!allowEntry) {
+            router.push('/login');
+        }
+    }, [allowEntry, router]);
 
-  const [allocatedPoints, setAllocatedPoints] = useState<number[]>(Array(candidates.length).fill(0));
-  let candidate_rows
+    const [allocatedPoints, setAllocatedPoints] = useState<number[]>(Array(candidates.length).fill(0));
+    let candidateRows: JSX.Element[];
 
-  if (candidates.length < 2)
-    candidate_rows = [<div key='0' className={styles.no_candidates}>No Candidates Yet</div>];
-  
-  else {
+    if (candidates.length < 2) {
+        candidateRows = [<div key='0' className={styles.no_candidates}>No Candidates Yet</div>];
+    } else {
+        const unallocatedPoints = Array.from({ length: Math.min(12, candidates.length) }, (_, i) => candidates.length - i)
+            .filter(n => !allocatedPoints.includes(n));
 
-    const unallocated_points = Array.from({length: Math.min(12, candidates.length)}, (_, i) => candidates.length - i)
-      .filter(n => !allocatedPoints.includes(n));
+        unallocatedPoints.splice(1, 1);
 
-    unallocated_points.splice(1, 1)
+        candidateRows = candidates.map((country, i) => {
+            return (
+                <div key={country} className={styles.artistBox}>
+                    <div style={{ marginLeft: 10 }}>{country}</div>
+                    <select
+                        className={styles.selectMenu}
+                        style={{ marginLeft: 20 }}
+                        onChange={e => {
+                            const newAllocations = [...allocatedPoints];
+                            newAllocations[i] = e.target.value === 'select' ? 0 : parseInt(e.target.value, 10);
+                            setAllocatedPoints(newAllocations);
+                        }}>
+                        <option key='selected'>{allocatedPoints[i] === 0 ? 'select' : allocatedPoints[i]}</option>
+                        {unallocatedPoints.map(pointVal => <option key={pointVal} value={pointVal}>{pointVal}</option>)}
+                        {allocatedPoints[i] === 0 ? null : <option>select</option>}
+                    </select>
+                </div>
+            );
+        });
 
-    candidate_rows = candidates.map((country, i) => {
-      return (
-        <div key={country} className={styles.candidate_row}>
-          <div style={{marginLeft: 10}}>{country}</div>
+        candidateRows.push(
+            <button key='button' className={styles.submitButton} onClick={async () => {
+                const response = await fetch('/api/rank_countries', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ rankedCandidates: candidates.map((country, i) => ({ country, ranking: allocatedPoints[i] })).filter(ranking => ranking.ranking !== 0) })
+                });
 
-          <select
-            style={{marginLeft: 20}}
-            onChange={e => {
-              const newAllocations = [...allocatedPoints]
-              newAllocations[i] = e.target.value === 'select' ? 0 : parseInt(e.target.value)
+                const respBody = await response.json();
 
-              setAllocatedPoints(newAllocations)
+                if (respBody.result !== 'success') {
+                    alert(respBody.result);
+                }
             }}>
-            <option key='selected'>{allocatedPoints[i] === 0 ? 'select' : allocatedPoints[i]}</option>
-            {unallocated_points.map(point_val => <option key={point_val} value={point_val}>{point_val}</option>)}
-            {allocatedPoints[i] === 0 ? null : <option>select</option>}
-          </select>
-        </div>
-      )
-    })
+                Submit
+            </button>
+        );
+    }
 
-    candidate_rows.push(
-      <button key='button' style={{padding: 10}} onClick={async () => {
-        const response = await fetch('/api/rank_countries', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ rankedCandidates: candidates.map((country, i) => ({country, ranking: allocatedPoints[i]})).filter(ranking => ranking.ranking !== 0)})
-        })
-
-        const resp_body = await response.json()
-
-        if (resp_body.result !== 'success')
-          alert(resp_body.result)
-      }}>
-        Submit
-      </button>
-    )
-  }
-
-  return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        {candidate_rows}
-      </div>
-    </main>
-  );
+    return (
+        <main className={styles.main}>
+            <div className={styles.container}>
+                {candidateRows}
+            </div>
+        </main>
+    );
 }

@@ -30,10 +30,10 @@ export const tables = {
     table_name: 'country_rankings',
     ip: 'ip',
     rankings: 'rankings'
-  } 
+  }
 }
-  
- 
+
+
 
 export type Artist = {
   name: string,
