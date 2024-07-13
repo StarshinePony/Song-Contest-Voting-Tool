@@ -25,8 +25,15 @@ export const tables = {
     table_name: 'logins',
     password: 'password',
     votes: 'votes'
-  }
+  },
+  country_rankings: {
+    table_name: 'country_rankings',
+    ip: 'ip',
+    rankings: 'rankings'
+  } 
 }
+  
+ 
 
 export type Artist = {
   name: string,
@@ -159,6 +166,21 @@ export class DB {
       `SELECT * FROM ${tables.countries.table_name} WHERE ${tables.countries.session_id}=?`,
       session_id
     );
+  }
+
+  public async get_country_names(): Promise<string[]> {
+    await this.dbReady;
+
+    return (await this.db.all(`SELECT ${tables.countries.name} FROM ${tables.countries.table_name}`)).map(country => country.name)
+  }
+
+  public async submit_rankings(ip: string, rankings: Array<any>) {
+    await this.dbReady;
+
+    await this.db.run(
+      `INSERT OR REPLACE INTO ${tables.country_rankings.table_name} (${tables.country_rankings.ip}, ${tables.country_rankings.rankings}) VALUES (?, ?)`,
+      ip, JSON.stringify(rankings)
+    )
   }
 
   public async get_artists(): Promise<Artist[] | undefined> {
