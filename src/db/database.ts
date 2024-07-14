@@ -28,11 +28,10 @@ export const tables = {
   },
   country_rankings: {
     table_name: 'country_rankings',
-    ip: 'ip',
+    voter: 'voter',
     rankings: 'rankings'
   }
 }
-
 
 
 export type Artist = {
@@ -50,6 +49,16 @@ export type Country = {
 export type Login = {
   password: string,
   votes: number
+}
+
+type Ranking_Entry = {
+  country: string,
+  ranking_points: number
+}
+
+type Voter_Rankings = {
+  voter: string,
+  rankings: Ranking_Entry[]
 }
 
 export class DB {
@@ -174,13 +183,20 @@ export class DB {
     return (await this.db.all(`SELECT ${tables.countries.name} FROM ${tables.countries.table_name}`)).map(country => country.name)
   }
 
-  public async submit_rankings(ip: string, rankings: Array<any>) {
+  public async submit_rankings(voter_name: string, rankings: any[]) {
     await this.dbReady;
 
     await this.db.run(
-      `INSERT OR REPLACE INTO ${tables.country_rankings.table_name} (${tables.country_rankings.ip}, ${tables.country_rankings.rankings}) VALUES (?, ?)`,
-      ip, JSON.stringify(rankings)
+      `INSERT OR REPLACE INTO ${tables.country_rankings.table_name} (${tables.country_rankings.voter}, ${tables.country_rankings.rankings}) VALUES (?, ?)`,
+      voter_name, JSON.stringify(rankings)
     )
+  }
+
+  public async get_rankings(): Promise<Voter_Rankings[]> {
+    await this.dbReady;
+
+    return (await this.db.all(`SELECT * FROM ${tables.country_rankings.table_name}`))
+      .map(voter_rankings => ({ voter: voter_rankings.voter, rankings: JSON.parse(voter_rankings.rankings) }))
   }
 
   public async get_artists(): Promise<Artist[] | undefined> {

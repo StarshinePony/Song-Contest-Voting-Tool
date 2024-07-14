@@ -2,8 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { DB } from '@/db/database';
 import { randomBytes } from 'crypto';
 import { stringify } from 'csv-stringify/sync';
+import adminHandler from '@/admin_handler';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { numAccounts } = req.body;
     const logins = [];
 
@@ -15,8 +16,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const csv = stringify(logins, { header: true });
-    res.json({ csv });
+    res.json({ result: csv });
 }
+
+export default adminHandler(handler)
 
 // Function to generate a random 6-digit number
 const generateRandomSixDigitNumber = () => {

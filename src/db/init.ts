@@ -25,7 +25,7 @@ async function setup() {
       ${tables.logins.votes} INTEGER
     );
     CREATE TABLE ${tables.country_rankings.table_name} (
-      ${tables.country_rankings.ip} TEXT PRIMARY KEY,
+      ${tables.country_rankings.voter} TEXT PRIMARY KEY,
       ${tables.country_rankings.rankings} TEXT
     );
     

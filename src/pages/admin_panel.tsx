@@ -27,12 +27,12 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
         [newPass, setNewPass] = useState(''),
         [numAccounts, setNumAccounts] = useState(0);
 
-    const handleDownload = (csv: string) => {
+    const handleDownload = (csv: string, file_name: string) => {
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.setAttribute('href', url);
-        link.setAttribute('download', 'logins.csv');
+        link.setAttribute('download', `${file_name}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -127,11 +127,19 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                             });
 
                             const resp_body = await response.json();
-                            handleDownload(resp_body.csv);
+                            handleDownload(resp_body.csv, 'logins');
                         }}>
                             Generate Logins
                         </button>
                     </div>
+                    <button onClick={async () => {
+                            const response = await fetch('/api/get_rankings_csv', { method: 'GET' })
+
+                            const resp_body = await response.json()                            
+                            handleDownload(resp_body.csv, 'rankings')
+                        }}>
+                            Download Rankings
+                        </button>
                 </div>
             </div>
         </main>

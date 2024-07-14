@@ -14,8 +14,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context: Get
     const { req } = context;
     const allowEntry: boolean = !!req.cookies.country_session && await Credentials.country_session_check(req.cookies.country_session);
     const userCountry: string | undefined = req.cookies.country_name;
-    console.log(userCountry)
-    console.log(allowEntry)
+    //console.log(userCountry)
+    //console.log(allowEntry)
 
     const filteredCandidates = userCountry ? candidates.filter(country => country !== userCountry) : candidates;
 
