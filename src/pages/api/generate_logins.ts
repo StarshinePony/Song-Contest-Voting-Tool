@@ -16,7 +16,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const csv = stringify(logins, { header: true });
-    res.json({ result: csv });
+    res.json({ csv });
 }
 
 export default adminHandler(handler)

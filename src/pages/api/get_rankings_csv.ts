@@ -5,7 +5,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     const rankings = await DB.instance.get_rankings();
     
-    const csv_string = `Country Name,2 Pts to country,4 Pts to country,6 Pts to country,8 Pts to country,10 Pts to country,12 Pts to country\n${
+    const csv = `Country Name,2 Pts to country,4 Pts to country,6 Pts to country,8 Pts to country,10 Pts to country,12 Pts to country\n${
         rankings.map(voter_rankings  => {
             console.log(voter_rankings.rankings)
             const sorted_rankings = voter_rankings.rankings.sort((entryA, entryB) => entryA.ranking_points - entryB.ranking_points)
@@ -19,7 +19,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         }).join('\n')
     }`
 
-    res.json({ csv: csv_string })
+    res.json({ csv })
 }
 
 export default adminHandler(handler)
