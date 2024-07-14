@@ -19,12 +19,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context: Get
         const country = await DB.instance.get_country_by_session(userSession)
         userCountry = country?.name
     }
-    console.log(userCountry)
+    /*console.log(userCountry)
     console.log(allowEntry)
-    console.log(candidates)
+    console.log(candidates)*/
 
     const filteredCandidates = userCountry ? candidates.filter(country => country !== userCountry) : candidates;
-    console.log(filteredCandidates)
+    //console.log(filteredCandidates)
 
     return { props: { candidates: filteredCandidates, allowEntry } };
 };
@@ -44,10 +44,9 @@ export default function CountryVoting({ candidates, allowEntry }: Props) {
     if (candidates.length < 2) {
         candidateRows = [<div key='0' className={styles.no_candidates}>No Candidates Yet</div>];
     } else {
-        const unallocatedPoints = Array.from({ length: Math.min(12, candidates.length) }, (_, i) => candidates.length - i)
+        const largest_point = candidates.length + 1 < 12 ? candidates.length + 1 + +((candidates.length + 1) % 2 !== 0) : 12
+        const unallocatedPoints = Array.from({ length: largest_point / 2 }, (_, i) => largest_point - (i * 2))
             .filter(n => !allocatedPoints.includes(n));
-
-        unallocatedPoints.splice(1, 1);
 
         candidateRows = candidates.map((country, i) => {
             return (
@@ -76,7 +75,7 @@ export default function CountryVoting({ candidates, allowEntry }: Props) {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ rankedCandidates: candidates.map((country, i) => ({ country, ranking: allocatedPoints[i] })).filter(ranking => ranking.ranking !== 0) })
+                    body: JSON.stringify({ rankedCandidates: candidates.map((country, i) => ({ country, ranking_points: allocatedPoints[i] })).filter(ranking => ranking.ranking_points !== 0) })
                 });
 
                 const respBody = await response.json();

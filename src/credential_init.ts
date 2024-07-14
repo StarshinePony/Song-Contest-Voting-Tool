@@ -17,9 +17,9 @@ async function init_credentials() {
 
             while (!inputs[1]) {
                 inputs[1] = await rl.question('Input Password: ')
-                if (inputs[1].length < 8) {
+                if (inputs[1].length < 4) {
                     inputs[1] = ''
-                    console.log('Password must have at least 8 characters')
+                    console.log('Password must have at least 4 characters')
                 }
             }
 

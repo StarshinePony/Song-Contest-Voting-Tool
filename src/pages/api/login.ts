@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const session_id = hash(req.body.uname + hash(req.body.pass));
         const userCountry = await DB.instance.get_country(req.body.uname);
         await Credentials.create_session(req.body.uname, session_id);
-        console.log(userCountry?.name)
+        //console.log(userCountry?.name)
         res.setHeader('Set-Cookie', `country_session=${session_id}; country_name=${userCountry?.name}; Path=/; HttpOnly`).json({ result: 'success' });
     } else {
         res.json({ result: "invalid credentials" });
