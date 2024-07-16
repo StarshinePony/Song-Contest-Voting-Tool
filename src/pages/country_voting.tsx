@@ -5,10 +5,12 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import Credentials from '@/credentials';
+
 type Props = {
     candidates: string[],
     allowEntry: boolean
 };
+
 export const getServerSideProps: GetServerSideProps<Props> = async (context: GetServerSidePropsContext) => {
     const candidates: string[] = await DB.instance.get_country_names();
     const { req } = context;
@@ -32,11 +34,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context: Get
 export default function CountryVoting({ candidates, allowEntry }: Props) {
     const router = useRouter();
 
-    useEffect(() => {
-        if (!allowEntry) {
-            router.push('/login');
-        }
-    }, [allowEntry, router]);
+    if (!allowEntry)
+        return useEffect(() => { router.push('/login') });
 
     const [allocatedPoints, setAllocatedPoints] = useState<number[]>(Array(candidates.length).fill(0));
     let candidateRows: JSX.Element[];
@@ -80,9 +79,8 @@ export default function CountryVoting({ candidates, allowEntry }: Props) {
 
                 const respBody = await response.json();
 
-                if (respBody.result !== 'success') {
+                if (respBody.result !== 'success')
                     alert(respBody.result);
-                }
             }}>
                 Submit
             </button>

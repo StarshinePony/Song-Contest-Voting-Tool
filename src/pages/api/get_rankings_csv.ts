@@ -7,9 +7,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     
     const csv = `Country Name,2 Pts to country,4 Pts to country,6 Pts to country,8 Pts to country,10 Pts to country,12 Pts to country\n${
         rankings.map(voter_rankings  => {
-            console.log(voter_rankings.rankings)
             const sorted_rankings = voter_rankings.rankings.sort((entryA, entryB) => entryA.ranking_points - entryB.ranking_points)
-            console.log(sorted_rankings)
 
             return sorted_rankings.reduce(
                 (accumulater, current) => `${accumulater},${current.country}`,

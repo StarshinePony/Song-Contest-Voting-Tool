@@ -81,22 +81,18 @@ export class DB {
 
   public async cast_vote(candidate: string) {
     await this.dbReady;
-    const existingVote = await this.db.get(
+
+    let votes = await this.db.get(
       `SELECT ${tables.artist_votes.votes} FROM ${tables.artist_votes.table_name} WHERE ${tables.artist_votes.candidate} = ?`,
       candidate
     );
 
-    if (existingVote) {
-      await this.db.run(
-        `UPDATE ${tables.artist_votes.table_name} SET ${tables.artist_votes.votes} = ${tables.artist_votes.votes} + 1 WHERE ${tables.artist_votes.candidate} = ?`,
-        candidate
-      );
-    } else {
-      await this.db.run(
-        `INSERT INTO ${tables.artist_votes.table_name} (${tables.artist_votes.candidate}, ${tables.artist_votes.votes}) VALUES (?, 1)`,
-        candidate
-      );
-    }
+    votes = votes ? votes + 1 : 1
+
+    await this.db.run(
+      `INSERT OR REPLACE INTO ${tables.artist_votes.table_name} (${tables.artist_votes.candidate}, ${tables.artist_votes.votes}) VALUES (?, ?)`,
+      candidate, votes
+    );
   }
 
   public async update_remaining_votes(loginCode: string, remainingVotes: number) {
@@ -199,7 +195,7 @@ export class DB {
       .map(voter_rankings => ({ voter: voter_rankings.voter, rankings: JSON.parse(voter_rankings.rankings) }))
   }
 
-  public async get_artists(): Promise<Artist[] | undefined> {
+  public async get_artists(): Promise<Artist[]> {
     await this.dbReady;
 
     return this.db.all(`SELECT * FROM ${tables.artists.table_name}`);
@@ -213,12 +209,12 @@ export class DB {
       session_id, country_name
     );
   }
-  public async check_login(code: string): Promise<Login | undefined> {
+  
+  public async get_remaining_votes(code: string): Promise<number | undefined> {
     await this.dbReady;
 
-    return await this.db.get(
-      `SELECT * FROM ${tables.logins.table_name} WHERE ${tables.logins.password}=?`,
-      code
-    );
+    const entry = await this.db.get(`SELECT ${tables.logins.votes} FROM ${tables.logins.table_name} WHERE ${tables.logins.password}=?`, code);
+
+    return entry ? entry.votes : undefined
   }
 }
