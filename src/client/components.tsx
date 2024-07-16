@@ -1,23 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation';
-import { useContext } from "react";
 import styles from '@/app/page.module.css'
-import { OverlayContext } from "./contexts";
-
-
-export function VoteBtn({ candidate, onVote }: { candidate: string, onVote: (candidate: string) => void }) {
-  const overlayCtx = useContext(OverlayContext);
-
-  return (
-    <button className={styles.vote_btn} onClick={async () => {
-      await onVote(candidate);
-      overlayCtx.setTop('0');
-    }}>
-      Vote
-    </button>
-  );
-}
 
 
 export function LoginBtn({ api_route, page_route, uname, pass }: { api_route: string, page_route: string, uname: string, pass: string }) {
