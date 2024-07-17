@@ -12,18 +12,17 @@ type Props = {
 export const getServerSideProps: GetServerSideProps<Props> = async (context: GetServerSidePropsContext) => {
     const candidates: string[] = await DB.instance.get_country_names();
     const { req } = context;
-    const allowEntry: boolean = !!req.cookies.country_session && await Credentials.country_session_check(req.cookies.country_session);
-    const userCountry: string | undefined = req.cookies.country_name;
-    //console.log(userCountry)
-    //console.log(allowEntry)
+    let user
 
-    const filteredCandidates = userCountry ? candidates.filter(country => country !== userCountry) : candidates;
+    if (!req.cookies.country_session || !(user = await DB.instance.get_candidate_by_session(req.cookies.country_session)))
+        return { props: { candidates: [], allowEntry: false } }
 
-    return { props: { candidates: filteredCandidates, allowEntry } };
+    const filteredCandidates = candidates.filter(country => country !== user.country);
+
+    return { props: { candidates: filteredCandidates, allowEntry: true } };
 };
 
 export default function Login({ allowEntry }: { allowEntry: boolean }) {
-    const [code, setCode] = useState('');
     const router = useRouter()
 
     if (allowEntry)

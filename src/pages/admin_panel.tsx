@@ -17,12 +17,10 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
         return useEffect(() => { router.push('/admin_login') })
 
     const
-        [musicianName, setMusicianName] = useState(''),
-        [musicianSong, setMusicianSong] = useState(''),
-        [musicianCountry, setMusicianCountry] = useState(''),
-        [countryName, setCountryName] = useState(''),
-        [countryPass, setCountryPass] = useState(''),
-        [countryPass2, setCountryPass2] = useState(''),
+        [candidateName, setCandidateName] = useState(''),
+        [candidateSong, setCandidateSong] = useState(''),
+        [candidateCountry, setCandidateCountry] = useState(''),
+        [candidatePass, setCandidatePass] = useState(''),
         [currentPass, setCurrentPass] = useState(''),
         [newPass, setNewPass] = useState(''),
         [numAccounts, setNumAccounts] = useState(0);
@@ -46,22 +44,23 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                 </div>
                 <div className={styles.formContainer}>
                     <div className={styles.formSection}>
-                        <input type='text' onChange={e => setMusicianName(e.target.value)} placeholder='Name' />
-                        <input type='text' onChange={e => setMusicianSong(e.target.value)} placeholder='Song' />
-                        <input type='text' onChange={e => setMusicianCountry(e.target.value)} placeholder='Country' />
+                        <input type='text' onChange={e => setCandidateName(e.target.value)} placeholder='Name' />
+                        <input type='text' onChange={e => setCandidateSong(e.target.value)} placeholder='Song' />
+                        <input type='text' onChange={e => setCandidateCountry(e.target.value)} placeholder='Country' />
+                        <input type='password' onChange={e => setCandidatePass(e.target.value)} placeholder='Password' />
 
                         <button onClick={async () => {
-                            const response = await fetch('/api/add_musician', {
+                            const response = await fetch('/api/add_candidate', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: JSON.stringify({ musicianName, musicianSong, musicianCountry })
+                                body: JSON.stringify({ candidateName, candidateSong, candidateCountry, candidatePass })
                             });
 
                             alert((await response.json()).result)
                         }}>
-                            Add Musician
+                            Add Candidate
                         </button>
                     </div>
                     <div className={styles.formSection}>
@@ -71,9 +70,6 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                         <button onClick={async () => {
                             if (!currentPass || !newPass)
                                 return
-
-                            if (newPass.length < 8)
-                                return alert("Password must contain at least 8 characters")
 
                             const response = await fetch('/api/change_admin_password', {
                                 method: 'POST',
@@ -88,30 +84,6 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                             alert(resp_body.result)
                         }}>
                             Change Admin Password
-                        </button>
-                    </div>
-                    <div className={styles.formSection}>
-                        <input type='text' onChange={e => setCountryName(e.target.value)} placeholder='Name' />
-                        <input type='password' onChange={e => setCountryPass(e.target.value)} placeholder='Password' />
-                        <input type='password' onChange={e => setCountryPass2(e.target.value)} placeholder='Re-enter Password' />
-
-                        <button onClick={async () => {
-                            if (countryPass !== countryPass2) {
-                                alert("Passwords Do Not Match")
-                                return
-                            }
-
-                            const response = await fetch('/api/create_country_account', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({ countryName, countryPass })
-                            });
-
-                            alert((await response.json()).result)
-                        }}>
-                            Create Country Account
                         </button>
                     </div>
                     <div className={styles.formSection}>

@@ -5,7 +5,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!req.cookies.country_session)
    return res.json({ reslut: 'not logged in' })
 
-  const voter = await DB.instance.get_country_by_session(req.cookies.country_session)
+  const voter = await DB.instance.get_candidate_by_session(req.cookies.country_session)
 
   if (!voter)
     return res.json({ result: 'user session not found' })
