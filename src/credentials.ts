@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import fs from 'fs';
-import { DB } from './db/database';
+import { Candidate, DB } from './db/database';
 
 export default class Credentials {
     static admin_auth_check(auth: string): boolean {
@@ -31,18 +31,17 @@ export default class Credentials {
         return creds[0] === uname && hashedPassword === creds[1];
     }
 
-    static async country_login_check(uname: string, password: string): Promise<boolean> {
-        const country = await DB.instance.get_country(uname);
-        if (!country) return false;
+    static async country_login_check(uname: string, password: string): Promise<Candidate | undefined> {
+        const country = await DB.instance.get_candidate(uname);
+        console.log(country)
+        if (!country) return undefined;
 
-        const hash = crypto.createHash('sha512');
-        hash.update(password + country.salt);
-        const hashedPassword = hash.digest('hex');
+        const hashedPassword = crypto.createHash('sha512').update(password + country.salt).digest('hex');
 
-        return country.password_hash === hashedPassword;
+        return country.password_hash === hashedPassword ? country : undefined;
     }
 
-    static async create_session(country_name: string, session_id: string) {
-        await DB.instance.add_session(country_name, session_id);
+    static async create_session(uname: string, session_id: string) {
+        await DB.instance.add_session(uname, session_id);
     }
 }
