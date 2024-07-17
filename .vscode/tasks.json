@@ -22,6 +22,15 @@
             }
         },
         {
+            "label": "Initialize Database (sample data)",
+            "type": "shell",
+            "command": "npx ts-node src/db/init.ts use-sample-data",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
             "label": "Initialize Credentials",
             "type": "shell",
             "command": "npx ts-node src/credential_init.ts",
