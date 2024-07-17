@@ -20,16 +20,12 @@ export default function Login() {
         const result = await response.json();
 
         if (result.success) {
-            if (result.votes > 0) {
-                Cookies.set('loginCode', code);
-                Cookies.set('remainingVotes', result.votes);
-                router.push('/musician_voting');
-            } else {
-                setMessage('This code has no remaining votes.');
-            }
-        } else {
+            if (!result.voted)
+                return router.push('/musician_voting');
+            else
+                setMessage('This code has already used its votes');
+        } else
             setMessage('Invalid code');
-        }
     };
 
     return (

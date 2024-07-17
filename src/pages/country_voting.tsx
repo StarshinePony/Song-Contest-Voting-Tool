@@ -4,7 +4,6 @@ import "@/app/globals.css";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import Credentials from '@/credentials';
 
 type Props = {
     candidates: string[],
@@ -12,23 +11,21 @@ type Props = {
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context: GetServerSidePropsContext) => {
-    const candidates: string[] = await DB.instance.get_country_names();
     const { req } = context;
-    const allowEntry: boolean = !!req.cookies.country_session && await Credentials.country_session_check(req.cookies.country_session);
-    const userSession = req.cookies.country_session
-    let userCountry: string | undefined = undefined
-    if (userSession) {
-        const country = await DB.instance.get_country_by_session(userSession)
-        userCountry = country?.name
-    }
+    const candidates: string[] = await DB.instance.get_country_names();
+    let user
+
+    if(!req.cookies.country_session || !(user = await DB.instance.get_candidate_by_session(req.cookies.country_session)))
+        return { props: { candidates: [], allowEntry: false } }
+    
+    const filteredCandidates = candidates.filter(country => country !== user.country)
+
     /*console.log(userCountry)
     console.log(allowEntry)
-    console.log(candidates)*/
+    console.log(candidates)
+    console.log(filteredCandidates)*/
 
-    const filteredCandidates = userCountry ? candidates.filter(country => country !== userCountry) : candidates;
-    //console.log(filteredCandidates)
-
-    return { props: { candidates: filteredCandidates, allowEntry } };
+    return { props: { candidates: filteredCandidates, allowEntry: true } };
 };
 
 export default function CountryVoting({ candidates, allowEntry }: Props) {

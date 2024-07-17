@@ -6,13 +6,12 @@ import adminHandler from '@/admin_handler';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { numAccounts } = req.body;
-    const logins = [];
+    const logins =  await DB.instance.get_logins();
 
     for (let i = 0; i < numAccounts; i++) {
-        const password = generateRandomSixDigitNumber();
-        const votes = 10;
-        await DB.instance.create_login(password, votes);
-        logins.push({ password, votes });
+        const login_code = generateRandomSixDigitNumber();
+        await DB.instance.create_login(login_code);
+        logins.push({ login_code: login_code, voted: 'false' });
     }
 
     const csv = stringify(logins, { header: true });

@@ -8,9 +8,8 @@ function hash(data: string): string {
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-    // in case the request doesn't come from using the client ui for whatever reason
-    if (req.body.length < 8)
-        return res.json({ result: 'New password must have at least 8 characters' })
+    if (req.body.newPass.length < 4)
+        return res.json({ result: 'New password must have at least 4 characters' })
 
     const credential_lines = fs.readFileSync('credentials.txt', 'utf8').split('\n');
     if (credential_lines[1] !== hash(req.body.currentPass))

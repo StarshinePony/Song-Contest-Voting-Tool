@@ -3,10 +3,10 @@ import { DB } from '@/db/database';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { code } = req.body;
-    const remaining_votes = await DB.instance.get_remaining_votes(code);
+    const has_voted = await DB.instance.get_has_voted(code);
 
-    if (remaining_votes !== undefined)
-        res.json({ success: true, votes: remaining_votes });
+    if (has_voted !== undefined)
+        res.setHeader('Set-Cookie', `loginCode=${code}; Path=/`).json({ success: true, voted: has_voted });
     else
         res.json({ success: false, message: 'Invalid code' });
 }

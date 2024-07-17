@@ -8,23 +8,19 @@ export const tables = {
     candidate: 'candidate',
     votes: 'votes'
   },
-  artists: {
-    table_name: 'artists',
+  candidates: {
+    table_name: 'candidates',
     name: 'name',
     country: 'country',
-    song: 'song'
-  },
-  countries: {
-    table_name: 'countries',
-    name: 'name',
+    song: 'song',
     password_hash: 'password_hash',
     salt: 'salt',
     session_id: 'session_id'
   },
   logins: {
     table_name: 'logins',
-    password: 'password',
-    votes: 'votes'
+    login_code: 'login_code',
+    voted: 'voted'
   },
   country_rankings: {
     table_name: 'country_rankings',
@@ -34,14 +30,10 @@ export const tables = {
 }
 
 
-export type Artist = {
+export type Candidate = {
   name: string,
   country: string,
-  song: string
-}
-
-export type Country = {
-  name: string,
+  song: string,
   password_hash: string,
   salt: string,
   session_id: string
@@ -87,7 +79,7 @@ export class DB {
       candidate
     );
 
-    votes = votes ? votes + 1 : 1
+    votes = votes ? votes.votes + 1 : 1
 
     await this.db.run(
       `INSERT OR REPLACE INTO ${tables.artist_votes.table_name} (${tables.artist_votes.candidate}, ${tables.artist_votes.votes}) VALUES (?, ?)`,
@@ -95,11 +87,11 @@ export class DB {
     );
   }
 
-  public async update_remaining_votes(loginCode: string, remainingVotes: number) {
+  public async set_voted(loginCode: string) {
     await this.dbReady;
     await this.db.run(
-      `UPDATE ${tables.logins.table_name} SET ${tables.logins.votes} = ? WHERE ${tables.logins.password} = ?`,
-      remainingVotes, loginCode
+      `UPDATE ${tables.logins.table_name} SET ${tables.logins.voted} = ? WHERE ${tables.logins.login_code} = ?`,
+      'true', loginCode
     );
   }
 
@@ -112,42 +104,32 @@ export class DB {
     )
   }
 
-  public async add_musician_candidate(name: string, country: string, song: string): Promise<boolean> {
-    await this.dbReady;
-
-    try {
-      await this.db.run(`INSERT INTO ${tables.artists.table_name} (${tables.artists.name}, ${tables.artists.country}, ${tables.artists.song}) VALUES (?, ?, ?)`, name, country, song)
-    } catch (err) {
-      return false;
-    }
-    return true;
-  }
-
-  public async create_country_account(name: string, password: string): Promise<boolean> {
+  public async add_candidate(name: string, country: string, song: string, pass: string): Promise<boolean> {
     await this.dbReady;
 
     try {
       const salt = randomBytes(16).toString('base64');
-      const hash = createHash('sha512').update(password + salt).digest('hex');
-      await this.db.run(`INSERT INTO ${tables.countries.table_name} (${tables.countries.name}, ${tables.countries.password_hash}, ${tables.countries.salt}, ${tables.countries.session_id
-        }) VALUES (?, ?, ?, ?)`,
+      const hashed_password = createHash('sha512').update(pass + salt).digest('hex');
+      await this.db.run(`INSERT INTO ${tables.candidates.table_name} (${tables.candidates.name}, ${tables.candidates.country}, ${tables.candidates.song}, ${tables.candidates.password_hash}, ${tables.candidates.salt}, ${tables.candidates.session_id
+        }) VALUES (?, ?, ?, ?, ?, ?)`,
         name,
-        hash,
+        country,
+        song,
+        hashed_password,
         salt,
         null
       );
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
+      
+      return true
     }
+    catch (err) {return false}
   }
 
-  public async create_login(password: string, votes: number): Promise<boolean> {
+  public async create_login(login_code: string): Promise<boolean> {
     await this.dbReady;
 
     try {
-      await this.db.run(`INSERT INTO ${tables.logins.table_name} (${tables.logins.password}, ${tables.logins.votes}) VALUES (?, ?)`, password, votes);
+      await this.db.run(`INSERT INTO ${tables.logins.table_name} (${tables.logins.login_code}, ${tables.logins.voted}) VALUES (?, 'false')`, login_code);
       return true;
     } catch (err) {
       console.error(err);
@@ -155,20 +137,26 @@ export class DB {
     }
   }
 
-  public async get_country(name: string): Promise<Country | undefined> {
+  public async get_logins(): Promise<{ login_code: string, voted: string }[]> {
+    await this.dbReady;
+
+    return (await this.db.all(`SELECT * FROM ${tables.logins.table_name}`));
+  }
+
+  public async get_country(name: string): Promise<Candidate | undefined> {
     await this.dbReady;
 
     return await this.db.get(
-      `SELECT * FROM ${tables.countries.table_name} WHERE ${tables.countries.name}=?`,
+      `SELECT * FROM ${tables.candidates.table_name} WHERE ${tables.candidates.name}=?`,
       name
     );
   }
 
-  public async get_country_by_session(session_id: string): Promise<Country | undefined> {
+  public async get_candidate_by_session(session_id: string): Promise<Candidate | undefined> {
     await this.dbReady;
 
     return await this.db.get(
-      `SELECT * FROM ${tables.countries.table_name} WHERE ${tables.countries.session_id}=?`,
+      `SELECT * FROM ${tables.candidates.table_name} WHERE ${tables.candidates.session_id}=?`,
       session_id
     );
   }
@@ -176,7 +164,7 @@ export class DB {
   public async get_country_names(): Promise<string[]> {
     await this.dbReady;
 
-    return (await this.db.all(`SELECT ${tables.countries.name} FROM ${tables.countries.table_name}`)).map(country => country.name)
+    return (await this.db.all(`SELECT ${tables.candidates.country} FROM ${tables.candidates.table_name}`)).map(entry => entry.country)
   }
 
   public async submit_rankings(voter_name: string, rankings: any[]) {
@@ -195,26 +183,26 @@ export class DB {
       .map(voter_rankings => ({ voter: voter_rankings.voter, rankings: JSON.parse(voter_rankings.rankings) }))
   }
 
-  public async get_artists(): Promise<Artist[]> {
+  public async get_candidates(): Promise<Candidate[]> {
     await this.dbReady;
 
-    return this.db.all(`SELECT * FROM ${tables.artists.table_name}`);
+    return this.db.all(`SELECT * FROM ${tables.candidates.table_name}`);
   }
 
   public async add_session(country_name: string, session_id: string) {
     await this.dbReady;
 
     await this.db.run(
-      `UPDATE ${tables.countries.table_name} SET ${tables.countries.session_id}=? WHERE ${tables.countries.name}=?`,
+      `UPDATE ${tables.candidates.table_name} SET ${tables.candidates.session_id}=? WHERE ${tables.candidates.name}=?`,
       session_id, country_name
     );
   }
   
-  public async get_remaining_votes(code: string): Promise<number | undefined> {
+  public async get_has_voted(code: string): Promise<boolean | undefined> {
     await this.dbReady;
 
-    const entry = await this.db.get(`SELECT ${tables.logins.votes} FROM ${tables.logins.table_name} WHERE ${tables.logins.password}=?`, code);
+    const entry = await this.db.get(`SELECT ${tables.logins.voted} FROM ${tables.logins.table_name} WHERE ${tables.logins.login_code}=?`, code);
 
-    return entry ? entry.votes : undefined
+    return entry ? entry.voted === 'true' : undefined
   }
 }

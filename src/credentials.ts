@@ -31,10 +31,6 @@ export default class Credentials {
         return creds[0] === uname && hashedPassword === creds[1];
     }
 
-    static async country_session_check(session_id: string): Promise<boolean> {
-        return !!await DB.instance.get_country_by_session(session_id);
-    }
-
     static async country_login_check(uname: string, password: string): Promise<boolean> {
         const country = await DB.instance.get_country(uname);
         if (!country) return false;

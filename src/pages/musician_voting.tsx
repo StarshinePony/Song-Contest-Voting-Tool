@@ -2,28 +2,30 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import styles from '@/app/page.module.css';
-import type { Artist } from '@/db/database';
 import { DB } from '@/db/database';
 import '@/app/globals.css';
 import { GetServerSidePropsContext } from 'next';
 
+type CandidatePublicInfo = {
+  name: string,
+  country: string,
+  song: string
+}
+
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const candidates: Artist[] = await DB.instance.get_artists();
   const { req } = context
+  const candidates: CandidatePublicInfo[] = (await DB.instance.get_candidates())
+    .map(candidate => ({ name: candidate.name, country: candidate.country, song: candidate.song }));
   
   if (!req.cookies.loginCode)
     return { props: { candidates, allowEntry: false, hasVoted: false }}
   
-  const remaining_votes = await DB.instance.get_remaining_votes(req.cookies.loginCode)
+  const has_voted = await DB.instance.get_has_voted(req.cookies.loginCode)
 
-  // in case of manually created cookie
-  if (remaining_votes === undefined)
-    return { props: { candidates, allowEntry: false, hasVoted: false }}
-
-  return { props: { candidates, allowEntry: true, hasVoted: remaining_votes === 0 } };
+  return { props: { candidates, allowEntry: has_voted !== undefined, hasVoted: !!has_voted } }
 };
 
-export default function MusicianVoting({ candidates, allowEntry, hasVoted }: { candidates: Artist[], allowEntry: boolean, hasVoted: boolean }) {
+export default function MusicianVoting({ candidates, allowEntry, hasVoted }: { candidates: CandidatePublicInfo[], allowEntry: boolean, hasVoted: boolean }) {
   const router = useRouter();
   const [votes, setVotes] = useState<string[]>([])
   const [canVote, setCanVote] = useState(!hasVoted)
@@ -81,7 +83,11 @@ export default function MusicianVoting({ candidates, allowEntry, hasVoted }: { c
           });
       
           const result = await response.json();
-          alert(result.status === 400 ? 'Thanks for Voting! You have used all your votes.' : 'Error while voting');
+
+          if (!result.success)
+            return alert(`Error: ${result.message}`);
+
+          alert('Thanks for Voting! You have used all your votes')
           setCanVote(false)
         }}>
           Submit

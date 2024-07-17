@@ -3,10 +3,11 @@ import { DB } from '@/db/database'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const added = await DB.instance.add_musician_candidate(
-    req.body.musicianName,
-    req.body.musicianCountry,
-    req.body.musicianSong
+  const added = await DB.instance.add_candidate(
+    req.body.candidateName,
+    req.body.candidateCountry,
+    req.body.candidateSong,
+    req.body.candidatePass
   );
 
   res.json({ result: added ? "Candidate Added" : "Candidate Already Present" })
