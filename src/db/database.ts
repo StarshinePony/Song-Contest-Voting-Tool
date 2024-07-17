@@ -143,12 +143,12 @@ export class DB {
     return (await this.db.all(`SELECT * FROM ${tables.logins.table_name}`));
   }
 
-  public async get_country(name: string): Promise<Candidate | undefined> {
+  public async get_candidate(uname: string): Promise<Candidate | undefined> {
     await this.dbReady;
 
     return await this.db.get(
       `SELECT * FROM ${tables.candidates.table_name} WHERE ${tables.candidates.name}=?`,
-      name
+      uname
     );
   }
 

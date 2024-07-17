@@ -35,8 +35,8 @@ async function setup() {
           ${tables.candidates.name}, ${tables.candidates.country}, ${tables.candidates.song},
           ${tables.candidates.password_hash}, ${tables.candidates.salt}, ${tables.candidates.session_id}
         ) VALUES (?, ?, ?, ?, ?, ?)`,
-        `candidate${i}`, `song${i}`, `country${i}`,
-        createHash('sha512').update(`${i}`).digest('hex'), 'salt', null
+        `candidate${i}`, `country${i}`, `song${i}`,
+        createHash('sha512').update(`${i}salt`).digest('hex'), 'salt', null
       )
 
   await DB.instance.db.close();
