@@ -119,10 +119,10 @@ export class DB {
         salt,
         null
       );
-      
+
       return true
     }
-    catch (err) {return false}
+    catch (err) { return false }
   }
 
   public async create_login(login_code: string): Promise<boolean> {
@@ -197,7 +197,7 @@ export class DB {
       session_id, country_name
     );
   }
-  
+
   public async get_has_voted(code: string): Promise<boolean | undefined> {
     await this.dbReady;
 

@@ -6,7 +6,7 @@ import adminHandler from '@/admin_handler';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { numAccounts } = req.body;
-    const logins =  await DB.instance.get_logins();
+    const logins = await DB.instance.get_logins();
 
     for (let i = 0; i < numAccounts; i++) {
         const login_code = generateRandomSixDigitNumber();
