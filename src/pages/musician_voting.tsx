@@ -27,20 +27,21 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
 export default function MusicianVoting({ candidates, allowEntry, hasVoted }: { candidates: CandidatePublicInfo[], allowEntry: boolean, hasVoted: boolean }) {
   const router = useRouter();
-  const [votes, setVotes] = useState<string[]>([])
   const [canVote, setCanVote] = useState(!hasVoted)
+  const [votes, setVotes] = useState<{ candidate_name: string, votes: number}[]>(
+    candidates.map(candidate => ({ candidate_name: candidate.name, votes: 0}))
+  )
 
   if (!allowEntry)
     return useEffect(() => { router.push('/public_login') });
 
-  if (hasVoted && votes.length !== 10)
-    setVotes(Array(10))
+  const remaining_votes = canVote ? 10 - votes.reduce((sum, candidate) => sum + candidate.votes, 0) : 0
 
   return (
     <main className={styles.main}>
-      <div style={{ position: 'fixed', top:'5px', left: '5px' }}>Votes left: {10 - votes.length}</div>
+      <div style={{ position: 'fixed', top:'5px', left: '5px' }}>Votes left: {remaining_votes}</div>
       <div className={styles.container}>
-        {candidates.map(candidate => (
+        {candidates.map((candidate, i) => (
           <div key={candidate.name} className={styles.artistBox}>
             <div className={styles.artistInfo}>
               <div className={styles.artistName}>{candidate.name}</div>
@@ -51,17 +52,11 @@ export default function MusicianVoting({ candidates, allowEntry, hasVoted }: { c
                 className={styles.vote_btn}
                 onClick={() => {
                   const new_votes = [...votes]
-                  const i = votes.indexOf(candidate.name)
-
-                  if (i !== -1)
-                    new_votes.splice(i, 1)
-                  else
-                    new_votes.push(candidate.name)
+                  new_votes[i].votes = (new_votes[i].votes + 1) % (new_votes[i].votes + 2 - +(remaining_votes === 0))
 
                   setVotes(new_votes)
                 }}>
-                  Vote
-                  {votes.includes(candidate.name) && <img src='/check_mark.png' style={{width:'12px', height:'12px', marginLeft:'5px'}} />}
+                  {`Vote${votes[i].votes > 0 ? `: ${votes[i].votes}` : ''}`}
                 </button>
               )}
             </div>
@@ -79,7 +74,7 @@ export default function MusicianVoting({ candidates, allowEntry, hasVoted }: { c
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ votes, loginCode }),
+            body: JSON.stringify({ votes: votes.filter(vote => vote.votes !== 0), loginCode }),
           });
       
           const result = await response.json();

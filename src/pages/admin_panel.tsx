@@ -3,6 +3,7 @@ import Credentials from '@/credentials';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import '@/app/globals.css'
 
 export const getServerSideProps = ((context: GetServerSidePropsContext) => {
     const { req } = context
@@ -104,7 +105,8 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                             Generate Logins
                         </button>
                     </div>
-                    <button onClick={async () => {
+                    <div className={styles.formSection}>
+                        <button onClick={async () => {
                             const response = await fetch('/api/get_rankings_csv', { method: 'GET' })
 
                             const resp_body = await response.json()                            
@@ -112,6 +114,7 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                         }}>
                             Download Rankings
                         </button>
+                    </div>
                 </div>
             </div>
         </main>
