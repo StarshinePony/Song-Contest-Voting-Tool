@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from '@/app/page.module.css';
 import '@/app/globals.css'
+
 export default function Login() {
     const router = useRouter();
     const [code, setCode] = useState('');
