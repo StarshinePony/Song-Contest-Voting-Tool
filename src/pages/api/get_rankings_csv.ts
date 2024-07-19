@@ -3,7 +3,6 @@ import { DB } from "@/db/database";
 import { NextApiRequest, NextApiResponse } from "next";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const candidates = await DB.instance.get_candidates()
     const rankings = await DB.instance.get_rankings()
     const public_votes = await DB.instance.get_votes()
     
@@ -18,7 +17,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         }).join('\n')
     }\n${
-        public_votes.filter(entry => rankings.find(ranking => ranking.voter !== entry.candidate)).reduce(
+        public_votes.filter(entry => !rankings.find(ranking => ranking.voter === entry.candidate)).reduce(
             (accumulator, entry) => `${entry.candidate},${entry.votes},,,,,,\n${accumulator}`, ''
         )
     }`
