@@ -109,7 +109,7 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                         <button onClick={async () => {
                             const response = await fetch('/api/get_rankings_csv', { method: 'GET' })
 
-                            const resp_body = await response.json()                            
+                            const resp_body = await response.json()
                             handleDownload(resp_body.csv, 'rankings')
                         }}>
                             Download Rankings
