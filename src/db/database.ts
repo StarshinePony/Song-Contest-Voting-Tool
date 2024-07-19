@@ -71,19 +71,19 @@ export class DB {
     console.log("Database Ready")
   }
 
-  public async cast_vote(candidate: string) {
+  public async cast_vote(candidate: string, votes_to_add: number) {
     await this.dbReady;
 
-    let votes = await this.db.get(
+    let candidates_votes = await this.db.get(
       `SELECT ${tables.artist_votes.votes} FROM ${tables.artist_votes.table_name} WHERE ${tables.artist_votes.candidate} = ?`,
       candidate
     );
 
-    votes = votes ? votes.votes + 1 : 1
+    candidates_votes = candidates_votes ? candidates_votes.votes + votes_to_add : votes_to_add
 
     await this.db.run(
       `INSERT OR REPLACE INTO ${tables.artist_votes.table_name} (${tables.artist_votes.candidate}, ${tables.artist_votes.votes}) VALUES (?, ?)`,
-      candidate, votes
+      candidate, candidates_votes
     );
   }
 

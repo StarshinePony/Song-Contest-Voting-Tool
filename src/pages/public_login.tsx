@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from '@/app/page.module.css';
-import Cookies from 'js-cookie';
+import '@/app/globals.css'
 
 export default function Login() {
     const router = useRouter();
