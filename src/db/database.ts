@@ -87,6 +87,12 @@ export class DB {
     );
   }
 
+  public async get_votes(): Promise<{ candidate: string, votes: number }[]> {
+    await this.dbReady;
+
+    return await this.db.all(`SELECT * FROM ${tables.artist_votes.table_name}`)
+  }
+
   public async set_voted(loginCode: string) {
     await this.dbReady;
     await this.db.run(
