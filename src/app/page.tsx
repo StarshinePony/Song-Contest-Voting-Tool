@@ -15,9 +15,6 @@ export default function Home() {
           <Link href="login" passHref>
             <button>Country Voting</button>
           </Link>
-          <Link href="admin_panel" passHref>
-            <button>Admin Panel Login</button>
-          </Link>
         </div>
       </div>
     </div>
