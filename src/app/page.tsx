@@ -10,10 +10,10 @@ export default function Home() {
         </div>
         <div className={styles.navBtns}>
           <Link href="public_login" passHref>
-            <button>User Voting</button>
+            <button>Vote!</button>
           </Link>
           <Link href="login" passHref>
-            <button>Country Voting</button>
+            <button>Country Login</button>
           </Link>
         </div>
       </div>
