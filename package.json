@@ -6,7 +6,8 @@
     "dev": "next dev -H 0.0.0.0",
     "build": "next build",
     "start": "ts-node server.ts",
-    "lint": "next lint"
+    "lint": "next lint",
+    "runProd": "npm i && npx next build && npx next start -p 8963 -H 127.0.0.1"
   },
   "dependencies": {
     "@types/sqlite3": "^3.1.11",

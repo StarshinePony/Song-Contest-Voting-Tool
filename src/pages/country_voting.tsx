@@ -40,10 +40,10 @@ export default function CountryVoting({ candidates, allowEntry }: Props) {
     if (candidates.length < 2) {
         candidateRows = [<div key='0' className={styles.no_candidates}>No Candidates Yet</div>];
     } else {
-        const largest_point = candidates.length + 1 < 12 ? candidates.length + 1 + +((candidates.length + 1) % 2 !== 0) : 12
-        const unallocatedPoints = Array.from({ length: largest_point / 2 }, (_, i) => largest_point - (i * 2))
-            .filter(n => !allocatedPoints.includes(n));
-
+        const max_point = 12;
+        const largest_point = Math.min(max_point, candidates.length * 2);
+        const unallocatedPoints = Array.from({ length: Math.ceil(largest_point / 2) }, (_, i) => largest_point - (i * 2))
+            .filter(n => !allocatedPoints.includes(n) && n > 0);
         candidateRows = candidates.map((country, i) => {
             return (
                 <div key={country} className={styles.artistBox}>
