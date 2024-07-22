@@ -5,7 +5,15 @@
   align-items: center;
   padding: 6rem;
   min-height: 100vh;
-  background-color: #7e007e;
+  background: hsla(328, 75%, 45%, 1);
+
+  background: linear-gradient(90deg, hsla(328, 75%, 45%, 1) 0%, hsla(269, 85%, 41%, 1) 100%);
+
+  background: -moz-linear-gradient(90deg, hsla(328, 75%, 45%, 1) 0%, hsla(269, 85%, 41%, 1) 100%);
+
+  background: -webkit-linear-gradient(90deg, hsla(328, 75%, 45%, 1) 0%, hsla(269, 85%, 41%, 1) 100%);
+
+  filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#C81D77", endColorstr="#6710C2", GradientType=1);
 
 }
 
@@ -16,11 +24,12 @@
   width: 90vw;
   max-width: 1200px;
   padding: 2rem;
-  background-color: #5e005e;
+  background-color: #7e007e;
   border-radius: 18px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   color: #fff;
   overflow: hidden;
+  margin: 40px;
 }
 
 .header {
@@ -263,6 +272,11 @@
   border: 1px solid #ccc;
   font-size: 1rem;
   margin-bottom: 1rem;
+}
+
+.logo {
+  max-height: 200px;
+  max-width: 100%;
 }
 
 .submitButton {
