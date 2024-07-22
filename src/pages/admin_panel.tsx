@@ -65,6 +65,21 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                         </button>
                     </div>
                     <div className={styles.formSection}>
+                        <input type='text' onChange={e => setCandidateName(e.target.value)} placeholder='Candidate Name' />
+                        <button onClick={async () => {
+                            const response = await fetch('/api/remove_candidate', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ candidateName })
+                            });
+                            alert((await response.json()).result)
+                        }}>
+                            Delete Candidate
+                        </button>
+                    </div>
+                    <div className={styles.formSection}>
                         <input type='password' onChange={e => setCurrentPass(e.target.value)} placeholder='Current Password' />
                         <input type='password' onChange={e => setNewPass(e.target.value)} placeholder='New Password' />
 

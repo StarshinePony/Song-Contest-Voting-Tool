@@ -1,6 +1,7 @@
 import * as sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
 import { createHash, randomBytes } from 'crypto';
+import { error } from 'console';
 
 export const tables = {
   artist_votes: {
@@ -156,6 +157,23 @@ export class DB {
       `SELECT * FROM ${tables.candidates.table_name} WHERE ${tables.candidates.name}=?`,
       uname
     );
+  }
+  public async remove_candidate(name: string): Promise<boolean> {
+    try {
+      await this.dbReady;
+
+      await this.db.run(
+        `DELETE FROM ${tables.candidates.table_name} WHERE name = ?`,
+        name
+      )
+      console.log(true)
+
+      return true
+    }
+    catch (err) {
+      console.log(err)
+      return false
+    }
   }
 
   public async get_candidate_by_session(session_id: string): Promise<Candidate | undefined> {
