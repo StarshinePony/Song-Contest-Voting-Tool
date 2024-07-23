@@ -211,25 +211,36 @@
   color: #ff8bff;
 }
 
-.vote_btn {
+.vote_btns {
+  display: flex;
+  margin-top: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-left: calc(10px + 1.8em);
+}
+
+.vote_btns button {
   background-color: #ff8bff;
+  margin-inline: 10px;
+  text-align: center;
+  font-size: larger;
+  font-weight: bolder;
+  background-position: center center;
   color: #fff;
   border: none;
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 1rem;
+  width: 1.8em;
+  height: 1.2em;
   font-family: 'Arial', sans-serif;
-  border-radius: 25px;
-  cursor: pointer;
+  border-radius: 15px;
   transition: background-color 0.3s, transform 0.3s;
 }
 
-.vote_btn:hover {
+.vote_btns button:hover {
   background-color: #ff65d4;
   transform: translateY(-2px);
 }
 
-.vote_btn:active {
+.vote_btns button:active {
   background-color: #ff65d4;
   transform: translateY(0);
 }
