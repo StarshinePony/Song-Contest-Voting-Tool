@@ -159,21 +159,26 @@ export class DB {
     );
   }
   public async remove_candidate(name: string): Promise<boolean> {
-    try {
-      await this.dbReady;
+    await this.dbReady;
 
-      await this.db.run(
-        `DELETE FROM ${tables.candidates.table_name} WHERE name = ?`,
-        name
-      )
-      console.log(true)
+    const candidate = await this.db.get(
+      `SELECT * FROM ${tables.candidates.table_name} WHERE name = ?`,
+      name
+    );
 
-      return true
-    }
-    catch (err) {
-      console.log(err)
-      return false
-    }
+  if (!candidate)
+      return false;
+
+    await this.db.run(
+      `DELETE FROM ${tables.candidates.table_name} WHERE name = ?`,
+      name
+    )
+    await this.db.run(
+      `DELETE FROM ${tables.artist_votes.table_name} WHERE ${tables.artist_votes.candidate}=?`,
+      name
+    )
+
+    return true
   }
 
   public async get_candidate_by_session(session_id: string): Promise<Candidate | undefined> {

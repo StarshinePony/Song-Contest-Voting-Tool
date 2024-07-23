@@ -4,9 +4,18 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Run Server",
+            "label": "Run Server (Dev)",
             "type": "shell",
             "command": "npm run dev",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Server (Prod)",
+            "type": "shell",
+            "command": "npm run runProd",
             "group": {
                 "kind": "build",
                 "isDefault": true

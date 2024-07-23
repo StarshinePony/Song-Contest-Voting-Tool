@@ -48,16 +48,30 @@ export default function MusicianVoting({ candidates, allowEntry, hasVoted }: { c
               <div className={styles.artistCountry}>Country: {candidate.country}</div>
               <div className={styles.artistSong}>Song: {candidate.song}</div>
               {canVote && (
-                <button
-                  className={styles.vote_btn}
-                  onClick={() => {
-                    const new_votes = [...votes]
-                    new_votes[i].votes = (new_votes[i].votes + 1) % (new_votes[i].votes + 2 - +(remaining_votes === 0))
+                <div className={styles.vote_btns}>
+                  <button onClick={() => {
+                    if (votes[i].votes <= 0)
+                      return
 
+                    const new_votes = [...votes]
+                    --new_votes[i].votes
                     setVotes(new_votes)
-                  }}>
-                  {`Vote${votes[i].votes > 0 ? `: ${votes[i].votes}` : ''}`}
-                </button>
+                  }}>-</button>
+                  {votes[i].votes > 0 ? votes[i].votes : 'Vote'}
+                  <button onClick={() => {
+                    if (remaining_votes <= 0)
+                      return
+
+                    const new_votes = [...votes]
+                    ++new_votes[i].votes
+                    setVotes(new_votes)
+                  }}>+</button>
+                  <button style={{marginRight:0}} onClick={() => {
+                    const new_votes = [...votes]
+                    new_votes[i].votes = 0
+                    setVotes(new_votes)
+                  }}>X</button>
+                </div>
               )}
             </div>
           </div>

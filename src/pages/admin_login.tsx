@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Credentials from '@/credentials';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
+import '@/app/globals.css'
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
     const { req } = context;
