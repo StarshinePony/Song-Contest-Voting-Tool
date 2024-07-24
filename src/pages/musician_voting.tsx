@@ -39,8 +39,8 @@ export default function MusicianVoting({ candidates, allowEntry, hasVoted }: { c
 
   return (
     <main className={styles.main}>
-      <div style={{ position: 'fixed', top: '5px', left: '5px' }}>Votes left: {remaining_votes}</div>
       <div className={styles.container}>
+        <div style={{ position: 'fixed', top: '5px', fontFamily: 'Arial Black', color: 'white', fontSize: '2rem' }}>Votes left: {remaining_votes}</div>
         {candidates.map((candidate, i) => (
           <div key={candidate.name} className={styles.artistBox}>
             <div className={styles.artistInfo}>
@@ -66,13 +66,20 @@ export default function MusicianVoting({ candidates, allowEntry, hasVoted }: { c
                     ++new_votes[i].votes
                     setVotes(new_votes)
                   }}>+</button>
-                  <button style={{marginRight:0}} onClick={() => {
+                </div>
+              )}
+              {canVote && (
+                <div className={styles.vote_btns}>
+                  <button onClick={() => {
                     const new_votes = [...votes]
                     new_votes[i].votes = 0
                     setVotes(new_votes)
                   }}>X</button>
                 </div>
+
               )}
+              <div className={styles.del_btns}>
+              </div>
             </div>
           </div>
         ))}
