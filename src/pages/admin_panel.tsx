@@ -26,12 +26,22 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
         [newPass, setNewPass] = useState(''),
         [numAccounts, setNumAccounts] = useState(0);
 
-    const handleDownload = (csv: string, file_name: string) => {
+    const handleDownloadCSV = (csv: string, file_name: string) => {
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.setAttribute('href', url);
         link.setAttribute('download', `${file_name}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    const handleDownloadPDF = (blob: Blob, file_name: string) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `${file_name}.pdf`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -114,8 +124,8 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                                 body: JSON.stringify({ numAccounts })
                             });
 
-                            const resp_body = await response.json();
-                            handleDownload(resp_body.csv, 'logins');
+                            const blob = await response.blob();
+                            handleDownloadPDF(blob, 'logins');
                         }}>
                             Generate Logins
                         </button>
@@ -125,7 +135,7 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                             const response = await fetch('/api/get_rankings_csv', { method: 'GET' })
 
                             const resp_body = await response.json()
-                            handleDownload(resp_body.csv, 'rankings')
+                            handleDownloadCSV(resp_body.csv, 'rankings')
                         }}>
                             Download Rankings
                         </button>
