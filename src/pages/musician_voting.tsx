@@ -5,7 +5,8 @@ import styles from '@/app/page.module.css';
 import { DB } from '@/db/database';
 import '@/app/globals.css';
 import { GetServerSidePropsContext } from 'next';
-import logo from '../app/qc_logo.png';
+import logo from '../app/images/qc_logo.webp';
+import { link } from 'fs';
 type CandidatePublicInfo = {
   name: string,
   country: string,
@@ -103,7 +104,11 @@ export default function MusicianVoting({ candidates, allowEntry, hasVoted }: { c
             return alert(`Error: ${result.message}`);
 
           alert('Thanks for Voting! You have used all your votes')
+
           setCanVote(false)
+          router.push('https://quest-crusaders.de');
+
+
         }}>
           Submit
         </button>

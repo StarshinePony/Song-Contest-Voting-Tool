@@ -1,8 +1,8 @@
 import styles from "./page.module.css";
 import React from 'react';
 import Link from "next/link";
-import logo from './logo.png';
-import qc_logo from './qc_logo.png'
+import logo from './images/logo.webp';
+import qc_logo from './images/qc_logo.webp'
 import { log } from "console";
 export default function Home() {
   console.log(logo);

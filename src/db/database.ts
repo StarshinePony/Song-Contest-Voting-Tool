@@ -166,7 +166,7 @@ export class DB {
       name
     );
 
-  if (!candidate)
+    if (!candidate)
       return false;
 
     await this.db.run(

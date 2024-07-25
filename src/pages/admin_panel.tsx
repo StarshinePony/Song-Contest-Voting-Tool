@@ -24,7 +24,8 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
         [candidatePass, setCandidatePass] = useState(''),
         [currentPass, setCurrentPass] = useState(''),
         [newPass, setNewPass] = useState(''),
-        [numAccounts, setNumAccounts] = useState(0);
+        [numAccounts, setNumAccounts] = useState(0),
+        [databaseFile, setDatabaseFile] = useState<File | null>(null);
 
     const handleDownloadCSV = (csv: string, file_name: string) => {
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -137,6 +138,21 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
                         handleDownloadCSV(resp_body.csv, 'rankings')
                     }}>
                         Download Rankings
+                    </button>
+                </div>
+                <div className={styles.formSection}>
+                    <button onClick={async () => {
+                        const response = await fetch('/api/download_database', { method: 'GET' })
+                        const blob = await response.blob()
+                        const url = URL.createObjectURL(blob)
+                        const link = document.createElement('a')
+                        link.setAttribute('href', url)
+                        link.setAttribute('download', 'database.db')
+                        document.body.appendChild(link)
+                        link.click()
+                        document.body.removeChild(link)
+                    }}>
+                        Download Database
                     </button>
                 </div>
             </div>

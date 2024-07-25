@@ -4,7 +4,7 @@ import "@/app/globals.css";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import logo from '../app/qc_logo.png';
+import logo from '../app/images/qc_logo.webp';
 type Props = {
     candidates: string[],
     allowEntry: boolean
