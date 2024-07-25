@@ -11,7 +11,7 @@ export default function Home() {
       <img className={styles.logo} src={logo.src} alt="Logo"></img>
       <div className={styles.container}>
         <div className={styles.header}>
-          Bronyvision Songcontest<br />Galacon 2024 Edition<br />Voting
+          Voting
         </div>
         <div className={styles.navBtns}>
           <Link href="public_login" passHref>
@@ -22,7 +22,10 @@ export default function Home() {
           </Link>
         </div>
       </div>
-      <img className={styles.logo} src={qc_logo.src}></img>
+      <a href='https://quest-crusaders.de'>
+        <img className={styles.logo} src={qc_logo.src}></img>
+      </a>
+
     </div>
   );
 }

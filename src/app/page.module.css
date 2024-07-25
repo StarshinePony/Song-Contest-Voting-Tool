@@ -5,15 +5,7 @@
   align-items: center;
   padding: 6rem;
   min-height: 100vh;
-  background: hsla(328, 75%, 45%, 1);
-
-  background: linear-gradient(90deg, hsla(328, 75%, 45%, 1) 0%, hsla(269, 85%, 41%, 1) 100%);
-
-  background: -moz-linear-gradient(90deg, hsla(328, 75%, 45%, 1) 0%, hsla(269, 85%, 41%, 1) 100%);
-
-  background: -webkit-linear-gradient(90deg, hsla(328, 75%, 45%, 1) 0%, hsla(269, 85%, 41%, 1) 100%);
-
-  filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#C81D77", endColorstr="#6710C2", GradientType=1);
+  background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
 
 }
 
@@ -22,9 +14,9 @@
   flex-direction: column;
   align-items: center;
   width: 90vw;
-  max-width: 1200px;
+  max-width: 600px;
   padding: 2rem;
-  background-color: #7e007e;
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 18px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   color: #fff;
@@ -37,7 +29,7 @@
   font-weight: bold;
   margin-bottom: 2rem;
   text-align: center;
-  color: #ff8bff;
+  color: #f65cc3;
   font-family: 'Arial', sans-serif;
 }
 
@@ -84,7 +76,7 @@
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
-  background-color: #6d006d;
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
@@ -150,7 +142,7 @@
   width: 60%;
   max-width: 400px;
   padding: 1rem;
-  background-color: #5e005e;
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 12px;
   margin-bottom: 1rem;
   font-family: 'Arial Black', sans-serif;
@@ -262,7 +254,7 @@
   width: 100%;
   max-width: 400px;
   padding: 2rem;
-  background-color: #510051;
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 18px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   color: #fff;
@@ -287,6 +279,7 @@
 .logo {
   max-height: 200px;
   max-width: 100%;
+  margin: 20px;
 }
 
 .submitButton {

@@ -4,7 +4,7 @@ import "@/app/globals.css";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-
+import logo from '../app/qc_logo.png';
 type Props = {
     candidates: string[],
     allowEntry: boolean
@@ -15,9 +15,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context: Get
     const candidates: string[] = await DB.instance.get_country_names();
     let user
 
-    if(!req.cookies.country_session || !(user = await DB.instance.get_candidate_by_session(req.cookies.country_session)))
+    if (!req.cookies.country_session || !(user = await DB.instance.get_candidate_by_session(req.cookies.country_session)))
         return { props: { candidates: [], allowEntry: false } }
-    
+
     const filteredCandidates = candidates.filter(country => country !== user.country)
 
     /*console.log(userCountry)
@@ -86,9 +86,14 @@ export default function CountryVoting({ candidates, allowEntry }: Props) {
 
     return (
         <main className={styles.main}>
-            <div className={styles.container}>
-                {candidateRows}
-            </div>
+            <div className={styles.header}>Candidate Voting</div>
+
+            {candidateRows}
+            <a href='https://quest-crusaders.de'>
+                <img className={styles.logo} src={logo.src}></img>
+            </a>
+
+
         </main>
     );
 }

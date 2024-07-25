@@ -49,97 +49,95 @@ export default function AdminPanel({ allowEntry }: { allowEntry: boolean }) {
 
     return (
         <main className={styles.main}>
-            <div className={styles.container}>
-                <div className={styles.header}>
-                    Admin Panel
+            <div className={styles.header}>
+                Admin Panel
+            </div>
+            <div className={styles.formContainer}>
+                <div className={styles.formSection}>
+                    <input type='text' onChange={e => setCandidateName(e.target.value)} placeholder='Name' />
+                    <input type='text' onChange={e => setCandidateSong(e.target.value)} placeholder='Song' />
+                    <input type='text' onChange={e => setCandidateCountry(e.target.value)} placeholder='Country' />
+                    <input type='password' onChange={e => setCandidatePass(e.target.value)} placeholder='Password' />
+
+                    <button onClick={async () => {
+                        const response = await fetch('/api/add_candidate', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ candidateName, candidateSong, candidateCountry, candidatePass })
+                        });
+
+                        alert((await response.json()).result)
+                    }}>
+                        Add Candidate
+                    </button>
                 </div>
-                <div className={styles.formContainer}>
-                    <div className={styles.formSection}>
-                        <input type='text' onChange={e => setCandidateName(e.target.value)} placeholder='Name' />
-                        <input type='text' onChange={e => setCandidateSong(e.target.value)} placeholder='Song' />
-                        <input type='text' onChange={e => setCandidateCountry(e.target.value)} placeholder='Country' />
-                        <input type='password' onChange={e => setCandidatePass(e.target.value)} placeholder='Password' />
+                <div className={styles.formSection}>
+                    <input type='text' onChange={e => setCandidateName(e.target.value)} placeholder='Candidate Name' />
+                    <button onClick={async () => {
+                        const response = await fetch('/api/remove_candidate', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ candidateName })
+                        });
+                        alert((await response.json()).result)
+                    }}>
+                        Delete Candidate
+                    </button>
+                </div>
+                <div className={styles.formSection}>
+                    <input type='password' onChange={e => setCurrentPass(e.target.value)} placeholder='Current Password' />
+                    <input type='password' onChange={e => setNewPass(e.target.value)} placeholder='New Password' />
 
-                        <button onClick={async () => {
-                            const response = await fetch('/api/add_candidate', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({ candidateName, candidateSong, candidateCountry, candidatePass })
-                            });
+                    <button onClick={async () => {
+                        if (!currentPass || !newPass)
+                            return
 
-                            alert((await response.json()).result)
-                        }}>
-                            Add Candidate
-                        </button>
-                    </div>
-                    <div className={styles.formSection}>
-                        <input type='text' onChange={e => setCandidateName(e.target.value)} placeholder='Candidate Name' />
-                        <button onClick={async () => {
-                            const response = await fetch('/api/remove_candidate', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({ candidateName })
-                            });
-                            alert((await response.json()).result)
-                        }}>
-                            Delete Candidate
-                        </button>
-                    </div>
-                    <div className={styles.formSection}>
-                        <input type='password' onChange={e => setCurrentPass(e.target.value)} placeholder='Current Password' />
-                        <input type='password' onChange={e => setNewPass(e.target.value)} placeholder='New Password' />
+                        const response = await fetch('/api/change_admin_password', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ currentPass, newPass })
+                        });
 
-                        <button onClick={async () => {
-                            if (!currentPass || !newPass)
-                                return
+                        const resp_body = await response.json()
 
-                            const response = await fetch('/api/change_admin_password', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({ currentPass, newPass })
-                            });
+                        alert(resp_body.result)
+                    }}>
+                        Change Admin Password
+                    </button>
+                </div>
+                <div className={styles.formSection}>
+                    <input type='number' onChange={e => setNumAccounts(parseInt(e.target.value))} placeholder='Number of Accounts' />
 
-                            const resp_body = await response.json()
+                    <button onClick={async () => {
+                        const response = await fetch('/api/generate_logins', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ numAccounts })
+                        });
 
-                            alert(resp_body.result)
-                        }}>
-                            Change Admin Password
-                        </button>
-                    </div>
-                    <div className={styles.formSection}>
-                        <input type='number' onChange={e => setNumAccounts(parseInt(e.target.value))} placeholder='Number of Accounts' />
+                        const blob = await response.blob();
+                        handleDownloadPDF(blob, 'logins');
+                    }}>
+                        Generate Logins
+                    </button>
+                </div>
+                <div className={styles.formSection}>
+                    <button onClick={async () => {
+                        const response = await fetch('/api/get_rankings_csv', { method: 'GET' })
 
-                        <button onClick={async () => {
-                            const response = await fetch('/api/generate_logins', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({ numAccounts })
-                            });
-
-                            const blob = await response.blob();
-                            handleDownloadPDF(blob, 'logins');
-                        }}>
-                            Generate Logins
-                        </button>
-                    </div>
-                    <div className={styles.formSection}>
-                        <button onClick={async () => {
-                            const response = await fetch('/api/get_rankings_csv', { method: 'GET' })
-
-                            const resp_body = await response.json()
-                            handleDownloadCSV(resp_body.csv, 'rankings')
-                        }}>
-                            Download Rankings
-                        </button>
-                    </div>
+                        const resp_body = await response.json()
+                        handleDownloadCSV(resp_body.csv, 'rankings')
+                    }}>
+                        Download Rankings
+                    </button>
                 </div>
             </div>
         </main>

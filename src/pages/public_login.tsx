@@ -36,11 +36,12 @@ export default function Login() {
                     type='text'
                     value={code}
                     onChange={e => setCode(e.target.value)}
-                    placeholder='Enter your 6-digit code'
+                    placeholder='Enter your 6-digit code or scan qr code'
                     className={styles.inputField}
                 />
                 <button onClick={handleSubmit} className={styles.submitButton}>Submit</button>
                 {message && <p className={styles.message}>{message}</p>}
+                <h4>You can also scan the qr code!</h4>
             </div>
         </div>
     );
